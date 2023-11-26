@@ -16,8 +16,6 @@ import taboolib.common.platform.Platform
 import taboolib.common.platform.PlatformSide
 import taboolib.common.platform.event.SubscribeEvent
 import taboolib.common.platform.function.getProxyPlayer
-import taboolib.common.util.subList
-import taboolib.module.lang.sendLang
 import java.io.IOException
 
 /**
@@ -47,15 +45,8 @@ object ListenerVelocityTransfer {
 
     private fun execute(data: Array<String>, connection: ServerConnection) {
         when (data[0]) {
-            "SendLang" -> {
-                val to = data[1]
-                val node = data[2]
-                val args = subList(data.toList(), 3).toTypedArray()
-
-                try {
-                    getProxyPlayer(to)?.sendLang(node, *args)
-                } catch (_: IllegalStateException) {
-                }
+            "ForwardMessage" -> {
+                VelocityProxyManager.sendMessageToAll(*data)
             }
             "SendRaw" -> {
                 val to = data[1]
@@ -90,15 +81,6 @@ object ListenerVelocityTransfer {
             "UpdateNames" -> {
                 val names = data[1].split(",").map { it.split("-", limit = 2) }
                 VelocityProxyManager.allNames[connection.serverInfo.address.port] = names.associate { it[0] to it[1].takeIf { dn -> dn != "null" } }
-            }
-            "ItemShow" -> {
-                VelocityProxyManager.sendMessageToAll("ItemShow", data[1], data[2], data[3], data[4])
-            }
-            "InventoryShow" -> {
-                VelocityProxyManager.sendMessageToAll("InventoryShow", data[1], data[2], data[3], data[4])
-            }
-            "EnderChestShow" -> {
-                VelocityProxyManager.sendMessageToAll("EnderChestShow", data[1], data[2], data[3], data[4])
             }
             "FetchProxyChannels" -> {
                 VelocityChannelManager.sendAllProxyChannels(connection.serverInfo.address.port)

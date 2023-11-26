@@ -27,15 +27,21 @@ class ChatSession(val player: Player) {
     var lastPrivateMessage = ""
     var lastPrivateTo = ""
     var cancelChat = false
-    var channel: String?
-        private set
+    @JvmField
+    var channel: String? = null
 
     init {
-        val data = player.data
-        channel = if (data.channel != null && Channel.channels[data.channel] != null) {
-            data.channel
-        } else {
-            Settings.defaultChannel
+        val stored = player.data.channel
+        fun join(string: String): Boolean {
+            val id = Channel.channels.keys.firstOrNull { string.equals(it, ignoreCase = true) } ?: return false
+            val channel = Channel.channels[id]!!
+            setChannel(channel)
+            channel.listeners.add(player.name)
+            channel.events.join(player)
+            return true
+        }
+        if (stored == null || !join(stored)) {
+            join(Settings.defaultChannel)
         }
     }
 
@@ -100,6 +106,7 @@ class ChatSession(val player: Player) {
         }
 
         fun removeSession(player: Player) {
+            Channel.quit(player, hint = false)
             sessions -= player.uniqueId
         }
 

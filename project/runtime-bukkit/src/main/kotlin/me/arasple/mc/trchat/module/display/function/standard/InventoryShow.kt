@@ -79,6 +79,7 @@ object InventoryShow : Function("INVENTORY") {
     override fun parseVariable(sender: Player, arg: String): ComponentText? {
         return computeAndCache(sender).let {
             BukkitProxyManager.sendMessage(sender, arrayOf(
+                "ForwardMessage",
                 "InventoryShow",
                 MinecraftVersion.minecraftVersion,
                 sender.name,

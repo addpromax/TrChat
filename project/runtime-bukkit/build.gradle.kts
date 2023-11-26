@@ -12,7 +12,7 @@ dependencies {
     compileOnly(project(":project:common"))
     compileOnly(project(":project:module-adventure"))
     compileOnly(project(":project:module-nms"))
-    compileOnly("ink.ptms.core:v12001:12001:universal")
+    compileOnly("ink.ptms.core:v12002:12002:universal")
     compileOnly("net.md-5:bungeecord-api:1.20-R0.1-SNAPSHOT")
 
     compileOnly("com.discordsrv:discordsrv:1.26.0")

@@ -14,6 +14,8 @@ import taboolib.common.platform.command.command
 import taboolib.common5.util.decodeBase64
 import taboolib.expansion.createHelper
 import taboolib.module.lang.sendLang
+import taboolib.module.ui.virtual.openVirtualInventory
+import taboolib.module.ui.virtual.virtualize
 import taboolib.platform.util.sendLang
 
 /**
@@ -28,8 +30,8 @@ object CommandViews {
         command("view-item", permissionDefault = PermissionDefault.TRUE) {
             dynamic("item") {
                 execute<Player> { sender, _, argument ->
-                    ItemShow.cacheHopper.getIfPresent(argument)?.let {
-                        sender.openInventory(it)
+                    ItemShow.cacheInventory.getIfPresent(argument)?.let {
+                        sender.openVirtualInventory(it.virtualize())
                     } ?: kotlin.run {
                         sender.sendLang("Function-Inventory-Show-Unavailable")
                     }
@@ -46,7 +48,7 @@ object CommandViews {
             dynamic("inventory") {
                 execute<Player> { sender, _, argument ->
                     InventoryShow.cache.getIfPresent(argument)?.let {
-                        sender.openInventory(it)
+                        sender.openVirtualInventory(it.virtualize())
                     } ?: kotlin.run {
                         sender.sendLang("Function-Inventory-Show-Unavailable")
                     }
@@ -63,7 +65,7 @@ object CommandViews {
             dynamic("enderchest") {
                 execute<Player> { sender, _, argument ->
                     EnderChestShow.cache.getIfPresent(argument)?.let {
-                        sender.openInventory(it)
+                        sender.openVirtualInventory(it.virtualize())
                     } ?: kotlin.run {
                         sender.sendLang("Function-EnderChest-Show-Unavailable")
                     }

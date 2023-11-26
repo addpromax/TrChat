@@ -22,7 +22,7 @@ internal object KetherActions {
             now {
                 when (action.lowercase()) {
                     "join" -> Channel.join(player(), channel, hint)
-                    "quit", "leave" -> Channel.quit(player())
+                    "quit", "leave" -> Channel.quit(player(), true)
                     else -> error("Unknown channel action: $action")
                 }
             }

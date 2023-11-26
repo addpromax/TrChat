@@ -5,6 +5,7 @@ import taboolib.common.platform.Platform
 import taboolib.common.platform.PlatformSide
 import taboolib.common.platform.event.SubscribeEvent
 import taboolib.module.nms.MinecraftVersion.majorLegacy
+import taboolib.module.nms.PacketReceiveEvent
 import taboolib.module.nms.PacketSendEvent
 
 /**
@@ -15,15 +16,21 @@ import taboolib.module.nms.PacketSendEvent
 object ListenerPackets {
 
     /**
-     * 去除登录时右上角提示
+     * 去除进入时右上角提示/禁止聊天举报
      */
     @SubscribeEvent
     fun secure(e: PacketSendEvent) {
-        if (majorLegacy >= 11902) {
-            when (e.packet.name) {
-                "ClientboundServerDataPacket" -> e.packet.write("enforcesSecureChat", true)
-                "ClientboundPlayerChatHeaderPacket" -> e.isCancelled = true
-            }
+        if (majorLegacy < 11902) return
+        when (e.packet.name) {
+            "ClientboundServerDataPacket" -> e.packet.write("enforcesSecureChat", true)
+            "ClientboundPlayerChatHeaderPacket" -> e.isCancelled = true
+        }
+    }
+
+    @SubscribeEvent
+    fun secure(e: PacketReceiveEvent) {
+        if (e.packet.name == "ServerboundChatSessionUpdatePacket") {
+            e.isCancelled = true
         }
     }
 

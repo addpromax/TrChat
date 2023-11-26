@@ -57,7 +57,7 @@ class PrivateChannel(
             ) {
                 execute<Player> { sender, _, _ ->
                     if (sender.session.channel == this@PrivateChannel.id) {
-                        quit(sender)
+                        quit(sender, true)
                     } else {
                         sender.sendLang("Private-Message-No-Player")
                     }

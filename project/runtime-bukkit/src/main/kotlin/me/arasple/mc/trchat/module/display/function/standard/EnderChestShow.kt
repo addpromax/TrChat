@@ -78,6 +78,7 @@ object EnderChestShow : Function("ENDERCHEST") {
     override fun parseVariable(sender: Player, arg: String): ComponentText? {
         return computeAndCache(sender).let {
             BukkitProxyManager.sendMessage(sender, arrayOf(
+                "ForwardMessage",
                 "EnderChestShow",
                 MinecraftVersion.minecraftVersion,
                 sender.name,

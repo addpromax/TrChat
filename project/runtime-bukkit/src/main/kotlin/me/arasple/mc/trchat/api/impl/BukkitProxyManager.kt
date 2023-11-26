@@ -135,7 +135,7 @@ object BukkitProxyManager : ClientMessageManager {
         if (processor == null || Bukkit.getPlayerExact(target) != null) {
             getProxyPlayer(target)?.sendLang(node, *args)
         } else {
-            sendMessage(recipient, arrayOf("SendLang", target, node, *args))
+            sendMessage(recipient, arrayOf("ForwardMessage", "SendLang", target, node, *args))
         }
     }
 

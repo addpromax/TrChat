@@ -32,7 +32,7 @@ object CommandChannel {
             }
             literal("quit", "leave") {
                 execute<Player> { sender, _, _ ->
-                    Channel.quit(sender)
+                    Channel.quit(sender, true)
                 }
             }
             execute<Player> { _, _, _ ->

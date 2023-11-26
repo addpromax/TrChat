@@ -209,19 +209,18 @@ open class Channel(
         val channels = mutableMapOf<String, Channel>()
 
         fun join(player: Player, channel: String, hint: Boolean = true): Boolean {
-            val id = channels.keys.firstOrNull { channel.equals(it, ignoreCase = true) }
-            channels[id]?.let {
-                return join(player, it, hint)
-            }
-            quit(player)
-            return false
+            val id = channels.keys.firstOrNull { channel.equals(it, ignoreCase = true) } ?: return false
+            return join(player, channels[id]!!, hint)
         }
 
         fun join(player: Player, channel: Channel, hint: Boolean = true): Boolean {
             if (!player.passPermission(channel.settings.joinPermission)) {
-                player.sendLang("General-No-Permission")
+                if (hint) {
+                    player.sendLang("General-No-Permission")
+                }
                 return false
             }
+            quit(player, hint = false)
             player.session.setChannel(channel)
             channel.listeners.add(player.name)
             channel.events.join(player)
@@ -232,15 +231,17 @@ open class Channel(
             return true
         }
 
-        fun quit(player: Player) {
+        fun quit(player: Player, setDefault: Boolean = false, hint: Boolean = true) {
             player.session.getChannel()?.let {
                 if (!it.settings.autoJoin) {
                     it.listeners -= player.name
                 }
                 it.events.quit(player)
-                player.sendLang("Channel-Quit", it.id)
+                if (hint) {
+                    player.sendLang("Channel-Quit", it.id)
+                }
             }
-            if (!join(player, Settings.defaultChannel)) {
+            if (!setDefault || !join(player, Settings.defaultChannel)) {
                 player.session.setChannel(null)
             }
         }

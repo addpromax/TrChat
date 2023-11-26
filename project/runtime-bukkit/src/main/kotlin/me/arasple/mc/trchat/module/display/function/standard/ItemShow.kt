@@ -77,7 +77,7 @@ object ItemShow : Function("ITEM") {
     private val cacheComponent: Cache<ItemStack, ComponentText> = CacheBuilder.newBuilder()
         .maximumSize(50)
         .build()
-    val cacheHopper: Cache<String, Inventory> = CacheBuilder.newBuilder()
+    val cacheInventory: Cache<String, Inventory> = CacheBuilder.newBuilder()
         .maximumSize(50)
         .build()
 
@@ -115,6 +115,7 @@ object ItemShow : Function("ITEM") {
             if (ui) {
                 val sha1 = computeAndCache(sender, item).let {
                     BukkitProxyManager.sendMessage(sender, arrayOf(
+                        "ForwardMessage",
                         "ItemShow",
                         MinecraftVersion.minecraftVersion,
                         sender.name,
@@ -165,18 +166,24 @@ object ItemShow : Function("ITEM") {
 
     fun computeAndCache(sender: Player, item: ItemStack): Pair<String, String> {
         val sha1 = item.serializeToByteArray(zipped = false).encodeBase64().digest("sha-1")
-        if (cacheHopper.getIfPresent(sha1) != null) {
-            return sha1 to cacheHopper.getIfPresent(sha1)!!.serializeToByteArray().encodeBase64()
+        if (cacheInventory.getIfPresent(sha1) != null) {
+            return sha1 to cacheInventory.getIfPresent(sha1)!!.serializeToByteArray().encodeBase64()
         }
-        val menu = buildMenu<Hopper>(sender.asLangText("Function-Item-Show-Title", sender.name)) {
+//        val inv = if (item.type.name.endsWith("SHULKER_BOX")) {
+//            val blockStateMeta = item.itemMeta!!.clone() as BlockStateMeta
+//            val shulkerBox = blockStateMeta.blockState as ShulkerBox
+//            shulkerBox.inventory
+//        } else {
+        val inv = buildMenu<Hopper>(sender.asLangText("Function-Item-Show-Title", sender.name)) {
             rows(1)
             map("xxixx")
             set('x', XMaterial.BLACK_STAINED_GLASS_PANE) { name = "§r" }
             set('i', item)
             onClick(lock = true)
         }
-        cacheHopper.put(sha1, menu)
-        return sha1 to menu.serializeToByteArray().encodeBase64()
+//        }
+        cacheInventory.put(sha1, inv)
+        return sha1 to inv.serializeToByteArray().encodeBase64()
     }
 
     @Suppress("Deprecation")

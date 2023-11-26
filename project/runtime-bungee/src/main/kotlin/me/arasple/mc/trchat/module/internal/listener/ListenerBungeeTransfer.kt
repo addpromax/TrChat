@@ -15,9 +15,7 @@ import taboolib.common.platform.event.SubscribeEvent
 import taboolib.common.platform.function.console
 import taboolib.common.platform.function.getProxyPlayer
 import taboolib.common.platform.function.server
-import taboolib.common.util.subList
 import taboolib.module.chat.Components
-import taboolib.module.lang.sendLang
 import java.io.IOException
 
 /**
@@ -51,15 +49,8 @@ object ListenerBungeeTransfer {
     @Suppress("Deprecation")
     private fun execute(data: Array<String>, connection: Connection) {
         when (data[0]) {
-            "SendLang" -> {
-                val to = data[1]
-                val node = data[2]
-                val args = subList(data.toList(), 3).toTypedArray()
-
-                try {
-                    getProxyPlayer(to)?.sendLang(node, *args)
-                } catch (_: IllegalStateException) {
-                }
+            "ForwardMessage" -> {
+                BungeeProxyManager.sendMessageToAll(*data)
             }
             "SendRaw" -> {
                 val to = data[1]
@@ -94,15 +85,6 @@ object ListenerBungeeTransfer {
             "UpdateNames" -> {
                 val names = data[1].split(",").map { it.split("-", limit = 2) }
                 BungeeProxyManager.allNames[connection.address.port] = names.associate { it[0] to it[1].takeIf { dn -> dn != "null" } }
-            }
-            "ItemShow" -> {
-                BungeeProxyManager.sendMessageToAll("ItemShow", data[1], data[2], data[3], data[4])
-            }
-            "InventoryShow" -> {
-                BungeeProxyManager.sendMessageToAll("InventoryShow", data[1], data[2], data[3], data[4])
-            }
-            "EnderChestShow" -> {
-                BungeeProxyManager.sendMessageToAll("EnderChestShow", data[1], data[2], data[3], data[4])
             }
             "FetchProxyChannels" -> {
                 BungeeChannelManager.sendAllProxyChannels(connection.address.port)

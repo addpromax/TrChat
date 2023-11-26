@@ -89,12 +89,12 @@ public class Filter {
                 markNum = 0;
             }
             k = i;
-            curry = curr;
+//            curry = curr; // 无法屏蔽重复字符
             while (++k < length) {
                 int temp = charConvert(chs[k]);
-                if (temp == curry) {
-                    continue;
-                }
+//                if (temp == curry) {
+//                    continue;
+//                }
                 if (PUNCTUATIONS_SET.contains(temp)) {
                     continue;
                 }

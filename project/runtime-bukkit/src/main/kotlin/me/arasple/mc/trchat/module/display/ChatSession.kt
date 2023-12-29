@@ -7,7 +7,6 @@ import me.arasple.mc.trchat.module.display.channel.PrivateChannel
 import me.arasple.mc.trchat.util.color.CustomColor
 import me.arasple.mc.trchat.util.color.MessageColors
 import me.arasple.mc.trchat.util.data
-import me.arasple.mc.trchat.util.reportOnce
 import org.bukkit.entity.Player
 import taboolib.expansion.getDataContainer
 import taboolib.module.nms.Packet
@@ -54,7 +53,7 @@ class ChatSession(val player: Player) {
             if (selectedColor != null && player.hasPermission(MessageColors.COLOR_PERMISSION_NODE + selectedColor)) {
                 CustomColor.get(selectedColor)
             } else {
-                default ?: CustomColor(CustomColor.ColorType.NORMAL, "§r")
+                default ?: CustomColor(CustomColor.ColorType.NORMAL, "§f")
             }
         }
     }
@@ -73,15 +72,15 @@ class ChatSession(val player: Player) {
 
     fun addMessage(packet: Packet) {
         try {
+            val component = packet.getComponent()
             receivedMessages += ChatMessage(
                 packet.source,
-                packet.getComponent()?.toPlainText()?.replace("\\s".toRegex(), "")?.takeLast(48)
+                component?.toPlainText()?.replace("\\s".toRegex(), "")?.takeLast(48)
             )
             if (receivedMessages.size > 100) {
                 receivedMessages.removeFirstOrNull()
             }
-        } catch (t: Throwable) {
-            t.reportOnce("Error occurred while caching chat packet!Maybe your server doesn't support it")
+        } catch (_: Throwable) {
         }
     }
 

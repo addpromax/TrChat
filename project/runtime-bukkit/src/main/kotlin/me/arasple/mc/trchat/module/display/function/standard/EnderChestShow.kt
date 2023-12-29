@@ -60,8 +60,7 @@ object EnderChestShow : Function("ENDERCHEST") {
         .maximumSize(10)
         .build()
 
-    private val inventorySlots = IntRange(0, 26).toList()
-    private val AIR_ITEM = buildItem(XMaterial.GRAY_STAINED_GLASS_PANE) { name = "§r" }
+    private val AIR_ITEM = buildItem(XMaterial.GRAY_STAINED_GLASS_PANE) { name = "§f" }
 
     override fun createVariable(sender: Player, message: String): String {
         return if (!enabled) {
@@ -114,7 +113,7 @@ object EnderChestShow : Function("ENDERCHEST") {
         }
         val menu = buildMenu<Linked<ItemStack>>(sender.asLangText("Function-EnderChest-Show-Title", sender.name)) {
             rows(3)
-            slots(inventorySlots)
+            slots((0..26).toList())
             elements { (0..26).map { inventory.getItem(it).replaceAir() } }
             onGenerate { _, element, _, _ -> element }
             onClick(lock = true)

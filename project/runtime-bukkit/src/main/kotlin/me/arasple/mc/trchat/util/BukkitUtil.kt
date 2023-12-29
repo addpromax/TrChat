@@ -15,9 +15,19 @@ import org.bukkit.entity.Player
 import taboolib.common.util.unsafeLazy
 import taboolib.module.chat.ComponentText
 import taboolib.module.nms.MinecraftVersion
+import taboolib.module.ui.MenuHolder
+import taboolib.module.ui.type.Basic
 import taboolib.platform.util.sendLang
 
 val isDragonCoreHooked by unsafeLazy { Bukkit.getPluginManager().isPluginEnabled("DragonCore") && MinecraftVersion.major < 8  }
+
+fun createNoClickChest(rows: Int, title: String) =
+    MenuHolder(object : Basic(title) {
+        init {
+            rows(rows)
+            onClick(lock = true)
+        }
+    }).inventory
 
 fun String?.toCondition() = if (this == null) Condition.EMPTY else Condition(this)
 

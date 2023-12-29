@@ -1,7 +1,7 @@
 Plugin-Loading:
-  - '&r'
+  - '&f'
   - '&7正在加载 &3Tr&bChat&7... &8{0}'
-  - '&r'
+  - '&f'
 Plugin-Enabled: '&8[&3Tr&bChat&8] &b信息 &8| &3加载完毕. TrChat &av{0} &3现已启用, 敬请使用.'
 Plugin-Loaded-Functions: '&8[&3Tr&bChat&8] &b聊天 &8| &3成功载入 &b{0} &3个聊天功能... &8[{1} Ms]'
 Plugin-Loaded-Channels: '&8[&3Tr&bChat&8] &b聊天 &8| &3成功载入 &b{0} &3个聊天频道... &8[{1} Ms]'
@@ -58,7 +58,7 @@ General-Expansions-Header:
         command: '/papi reload'
 General-Expansions-Format:
   - type: JSON
-    text: '&8- [&a{0}]&r'
+    text: '&8- [&a{0}]&f'
     args:
       - hover: '&7点击下载'
         command: '/papi ecloud download {0}'
@@ -119,7 +119,7 @@ Function-Mention-Format:
         suggest: '/tell {0}'
 Function-Mention-Notify:
   - type: actionbar
-    text: '&d&l&k|&r &3&l玩家 &a&l{0} &3&l在聊天中At了你 &d&l&k|'
+    text: '&d&l&k|&f &3&l玩家 &a&l{0} &3&l在聊天中At了你 &d&l&k|'
   - type: sound
     sound: 'BLOCK_ANVIL_LAND'
     volume: 1
@@ -173,14 +173,14 @@ Function-Image-Show-Unavailable:
 Private-Message-Spy-Format: '&8[&3监听&8] &6{0} &2-> &3{1}&f: &7{2}'
 Private-Message-Spy-On:
   - type: actionbar
-    text: '&c&l&k|&r &a&l开启监听私聊模式 &c&l&k|'
+    text: '&c&l&k|&f &a&l开启监听私聊模式 &c&l&k|'
   - type: sound
     sound: 'BLOCK_ANVIL_LAND'
     volume: 1
     pitch: 2
 Private-Message-Spy-Off:
   - type: actionbar
-    text: '&c&l&k|&r &c&l关闭监听私聊模式 &c&l&k|'
+    text: '&c&l&k|&f &c&l关闭监听私聊模式 &c&l&k|'
   - type: sound
     sound: 'BLOCK_ANVIL_LAND'
     volume: 1

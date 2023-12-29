@@ -1,7 +1,7 @@
 Plugin-Loading:
-  - '&r'
+  - '&f'
   - '&7Loading &3Tr&bChat&7... &8{0}'
-  - '&r'
+  - '&f'
 Plugin-Enabled: '&8[&3Tr&bChat&8] &bINFO &8| &3Loaded. TrChat &av{0} &3has been enabled.'
 Plugin-Loaded-Functions: '&8[&3Tr&bChat&8] &bCHAT &8| &3Loaded &b{0} &3chat functions... &8[{1} Ms]'
 Plugin-Loaded-Channels: '&8[&3Tr&bChat&8] &bCHAT &8| &3Loaded &b{0} &3chat channels... &8[{1} Ms]'
@@ -55,7 +55,7 @@ General-Expansions-Header:
         command: '/papi reload'
 General-Expansions-Format:
   - type: JSON
-    text: '&8- [&a{0}]&r'
+    text: '&8- [&a{0}]&f'
     args:
       - hover: '&7Click to download'
         command: '/papi ecloud download {0}'
@@ -116,7 +116,7 @@ Function-Mention-Format:
         suggest: '/tell {0}'
 Function-Mention-Notify:
   - type: actionbar
-    text: '&d&l&k|&r &3&lPlayer &a&l{0} &3&lmentioned you in the chat &d&l&k|'
+    text: '&d&l&k|&f &3&lPlayer &a&l{0} &3&lmentioned you in the chat &d&l&k|'
   - type: sound
     sound: 'BLOCK_ANVIL_LAND'
     volume: 1
@@ -170,14 +170,14 @@ Function-Image-Show-Unavailable:
 Private-Message-Spy-Format: '&8[&3Spy&8] &6{0} &2-> &3{1}&f: &7{2}'
 Private-Message-Spy-On:
   - type: actionbar
-    text: '&c&l&k|&r &a&lSpy Mode Enabled &c&l&k|'
+    text: '&c&l&k|&f &a&lSpy Mode Enabled &c&l&k|'
   - type: sound
     sound: 'BLOCK_ANVIL_LAND'
     volume: 1
     pitch: 2
 Private-Message-Spy-Off:
   - type: actionbar
-    text: '&c&l&k|&r &c&lSpy Mode Disabled &c&l&k|'
+    text: '&c&l&k|&f &c&lSpy Mode Disabled &c&l&k|'
   - type: sound
     sound: 'BLOCK_ANVIL_LAND'
     volume: 1

@@ -13,7 +13,7 @@ Formats:
         text: '&8[&cSTAFF&8] '
         hover: |-
           &7Server &3%server_name%
-          &r
+          &f
           &7Version: &6%server_version%
           &7Online: &a%server_online%&7/&2%server_max_players%
           &7TPS: &b%server_tps%

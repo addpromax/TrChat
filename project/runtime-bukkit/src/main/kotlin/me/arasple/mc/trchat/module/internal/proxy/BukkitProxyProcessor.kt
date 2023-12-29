@@ -10,15 +10,11 @@ import me.arasple.mc.trchat.module.display.function.standard.ItemShow
 import me.arasple.mc.trchat.module.internal.TrChatBukkit
 import me.arasple.mc.trchat.module.internal.proxy.redis.RedisManager
 import me.arasple.mc.trchat.module.internal.proxy.redis.TrRedisMessage
-import me.arasple.mc.trchat.util.buildMessage
-import me.arasple.mc.trchat.util.print
+import me.arasple.mc.trchat.util.*
 import me.arasple.mc.trchat.util.proxy.common.MessageReader
-import me.arasple.mc.trchat.util.sendComponent
-import me.arasple.mc.trchat.util.toUUID
 import org.bukkit.Bukkit
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
-import org.bukkit.event.inventory.InventoryType
 import org.bukkit.plugin.messaging.PluginMessageListener
 import org.bukkit.plugin.messaging.PluginMessageRecipient
 import taboolib.common.platform.function.console
@@ -128,7 +124,7 @@ sealed interface BukkitProxyProcessor : PluginMessageListener {
                 val sha1 = data[3]
                 if (ItemShow.cacheInventory.getIfPresent(sha1) == null) {
                     val inventory = data[4].decodeBase64().deserializeToInventory(
-                        Bukkit.createInventory(null, InventoryType.HOPPER, console().asLangText("Function-Item-Show-Title", name))
+                        createNoClickChest(3, console().asLangText("Function-Item-Show-Title", name))
                     )
                     ItemShow.cacheInventory.put(sha1, inventory)
                 }
@@ -139,7 +135,7 @@ sealed interface BukkitProxyProcessor : PluginMessageListener {
                 val sha1 = data[3]
                 if (InventoryShow.cache.getIfPresent(sha1) == null) {
                     val inventory = data[4].decodeBase64().deserializeToInventory(
-                        Bukkit.createInventory(null, 6, console().asLangText("Function-Inventory-Show-Title", name))
+                        createNoClickChest(6, console().asLangText("Function-Inventory-Show-Title", name))
                     )
                     InventoryShow.cache.put(sha1, inventory)
                 }
@@ -150,7 +146,7 @@ sealed interface BukkitProxyProcessor : PluginMessageListener {
                 val sha1 = data[3]
                 if (EnderChestShow.cache.getIfPresent(sha1) == null) {
                     val inventory = data[4].decodeBase64().deserializeToInventory(
-                        Bukkit.createInventory(null, 3, console().asLangText("Function-EnderChest-Show-Title", name))
+                        createNoClickChest(3, console().asLangText("Function-EnderChest-Show-Title", name))
                     )
                     EnderChestShow.cache.put(sha1, inventory)
                 }

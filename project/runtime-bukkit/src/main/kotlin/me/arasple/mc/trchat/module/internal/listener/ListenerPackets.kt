@@ -4,6 +4,7 @@ import me.arasple.mc.trchat.module.display.ChatSession
 import taboolib.common.platform.Platform
 import taboolib.common.platform.PlatformSide
 import taboolib.common.platform.event.SubscribeEvent
+import taboolib.module.configuration.ConfigNode
 import taboolib.module.nms.MinecraftVersion.majorLegacy
 import taboolib.module.nms.PacketReceiveEvent
 import taboolib.module.nms.PacketSendEvent
@@ -15,6 +16,10 @@ import taboolib.module.nms.PacketSendEvent
 @PlatformSide([Platform.BUKKIT])
 object ListenerPackets {
 
+    @ConfigNode("Options.Cheat-Client-Secure-Chat", "settings.yml")
+    var cheatClientSecureChat = true
+        private set
+
     /**
      * 去除进入时右上角提示/禁止聊天举报
      */
@@ -22,7 +27,9 @@ object ListenerPackets {
     fun secure(e: PacketSendEvent) {
         if (majorLegacy < 11902) return
         when (e.packet.name) {
-            "ClientboundServerDataPacket" -> e.packet.write("enforcesSecureChat", true)
+            "ClientboundServerDataPacket" -> {
+                if (cheatClientSecureChat) e.packet.write("enforcesSecureChat", true)
+            }
             "ClientboundPlayerChatHeaderPacket" -> e.isCancelled = true
         }
     }

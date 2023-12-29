@@ -19,7 +19,7 @@ class HookNova : HookDisplayItem() {
         val novaMaterial = Nova.materialRegistry.getOrNull(item) ?: return item
         return buildItem(XMaterial.SHULKER_SHELL) {
             amount = item.amount
-            name = "§r" + novaMaterial.getLocalizedName(adaptPlayer(player).getLocale().lowercase())
+            name = "§f" + novaMaterial.getLocalizedName(adaptPlayer(player).getLocale().lowercase())
         }
     }
 }

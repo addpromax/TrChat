@@ -208,7 +208,7 @@ object Hex {
     }
 
     fun parseLegacy(message: String): String {
-        return ChatColor.translateAlternateColorCodes('&', message)
+        return ChatColor.translateAlternateColorCodes('&', message.replace("&r", "&f").replace("§r", "§f"))
     }
 
     /**

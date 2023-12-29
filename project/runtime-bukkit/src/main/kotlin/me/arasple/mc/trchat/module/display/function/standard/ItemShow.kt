@@ -12,9 +12,11 @@ import me.arasple.mc.trchat.module.internal.hook.type.HookDisplayItem
 import me.arasple.mc.trchat.module.internal.script.Reaction
 import me.arasple.mc.trchat.util.*
 import org.bukkit.Material
+import org.bukkit.block.ShulkerBox
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.BlockStateMeta
 import taboolib.common.io.digest
 import taboolib.common.platform.Platform
 import taboolib.common.platform.PlatformSide
@@ -33,11 +35,9 @@ import taboolib.module.nms.MinecraftVersion
 import taboolib.module.nms.getI18nName
 import taboolib.module.nms.getLocaleKey
 import taboolib.module.ui.buildMenu
-import taboolib.module.ui.type.Hopper
-import taboolib.platform.util.asLangText
-import taboolib.platform.util.buildItem
-import taboolib.platform.util.sendLang
-import taboolib.platform.util.serializeToByteArray
+import taboolib.module.ui.type.Basic
+import taboolib.module.ui.type.Linked
+import taboolib.platform.util.*
 
 /**
  * @author ItsFlicker
@@ -80,6 +80,8 @@ object ItemShow : Function("ITEM") {
     val cacheInventory: Cache<String, Inventory> = CacheBuilder.newBuilder()
         .maximumSize(50)
         .build()
+
+    private val AIR_ITEM = buildItem(XMaterial.GRAY_STAINED_GLASS_PANE) { name = "§f" }
 
     override fun createVariable(sender: Player, message: String): String {
         return if (!enabled) {
@@ -169,19 +171,30 @@ object ItemShow : Function("ITEM") {
         if (cacheInventory.getIfPresent(sha1) != null) {
             return sha1 to cacheInventory.getIfPresent(sha1)!!.serializeToByteArray().encodeBase64()
         }
-//        val inv = if (item.type.name.endsWith("SHULKER_BOX")) {
-//            val blockStateMeta = item.itemMeta!!.clone() as BlockStateMeta
-//            val shulkerBox = blockStateMeta.blockState as ShulkerBox
-//            shulkerBox.inventory
-//        } else {
-        val inv = buildMenu<Hopper>(sender.asLangText("Function-Item-Show-Title", sender.name)) {
-            rows(1)
-            map("xxixx")
-            set('x', XMaterial.BLACK_STAINED_GLASS_PANE) { name = "§r" }
-            set('i', item)
-            onClick(lock = true)
+        val inv = if (item.type.name.endsWith("SHULKER_BOX")) {
+            val blockStateMeta = item.itemMeta!! as BlockStateMeta
+            val shulkerBox = blockStateMeta.blockState as ShulkerBox
+            val shulkerInv = shulkerBox.inventory
+            buildMenu<Linked<ItemStack>>(sender.asLangText("Function-Item-Show-Title", sender.name)) {
+                rows(3)
+                slots((0..26).toList())
+                elements { (0..26).map { shulkerInv.getItem(it).replaceAir() } }
+                onGenerate { _, element, _, _ -> element }
+                onClick(lock = true)
+            }
+        } else {
+            buildMenu<Basic>(sender.asLangText("Function-Item-Show-Title", sender.name)) {
+                rows(3)
+                map(
+                    "xxxxxxxxx",
+                    "xxxxixxxx",
+                    "xxxxxxxxx"
+                )
+                set('x', XMaterial.BLACK_STAINED_GLASS_PANE) { name = "§f" }
+                set('i', item)
+                onClick(lock = true)
+            }
         }
-//        }
         cacheInventory.put(sha1, inv)
         return sha1 to inv.serializeToByteArray().encodeBase64()
     }
@@ -206,5 +219,7 @@ object ItemShow : Function("ITEM") {
             }
         }
     }
+
+    private fun ItemStack?.replaceAir() = if (isAir()) AIR_ITEM else this
 
 }

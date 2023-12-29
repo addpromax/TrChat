@@ -61,8 +61,8 @@ object InventoryShow : Function("INVENTORY") {
         .build()
 
     private val inventorySlots = IntRange(18, 53).toList()
-    private val AIR_ITEM = buildItem(XMaterial.GRAY_STAINED_GLASS_PANE) { name = "§r" }
-    private val PLACEHOLDER_ITEM = buildItem(XMaterial.WHITE_STAINED_GLASS_PANE) { name = "§r" }
+    private val AIR_ITEM = buildItem(XMaterial.GRAY_STAINED_GLASS_PANE) { name = "§f" }
+    private val PLACEHOLDER_ITEM = buildItem(XMaterial.WHITE_STAINED_GLASS_PANE) { name = "§f" }
 
     override fun createVariable(sender: Player, message: String): String {
         return if (!enabled) {

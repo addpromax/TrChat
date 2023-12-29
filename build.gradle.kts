@@ -39,7 +39,7 @@ subprojects {
         compileOnly(fileTree("${rootDir.resolve("libs")}"))
         compileOnly("com.google.code.gson:gson:2.8.5")
         compileOnly("com.google.guava:guava:21.0")
-        compileOnly("net.kyori:adventure-api:4.13.0")
+        compileOnly("net.kyori:adventure-api:4.15.0")
         implementation("com.eatthepath:fast-uuid:0.2.0")
 
         compileOnly("io.izzel.taboolib:common:$taboolib_version")
@@ -80,6 +80,7 @@ subprojects {
         relocate("taboolib", "${rootProject.group}.taboolib")
         relocate("kotlin.", "kotlin${kotlinVersionNum}.") { exclude("kotlin.Metadata") }
         relocate("com.eatthepath.uuid", "${rootProject.group}.library.uuid")
+        // Velocity properties
         relocate("@plugin_id@", rootProject.name.toLowerCase())
         relocate("@plugin_name@", rootProject.name)
         relocate("@plugin_version@", rootProject.version.toString())

@@ -32,22 +32,12 @@ fun ComponentText.toAdventure() = gson(toRawMessage())
 fun Packet.getComponent(): ComponentText? {
     return when (name) {
         "ClientboundSystemChatPacket" -> {
-//            val raw = if (gsonSerializer != null) {
-//                gson(source.invokeMethod<Component>("adventure\$content")!!)
-//            } else {
-//                NMS.instance.rawMessageFromCraftChatMessage(source.invokeMethod<Any>("content")!!)
-//            }
-            val raw = source.invokeMethod<String>("content", findToParent = false, remap = false) ?: return null
-            Components.parseRaw(raw)
+            val iChat = source.invokeMethod<Any>("a", findToParent = false, remap = false) ?: return null
+            Components.parseRaw(NMS.instance.rawMessageFromCraftChatMessage(iChat))
         }
         "PacketPlayOutChat" -> {
-//            val raw = if (gsonSerializer != null) {
-//                gson(read<Component>("adventure\$message")!!)
-//            } else {
-//                NMS.instance.rawMessageFromCraftChatMessage(read<Any>("a")!!)
-//            }
-            val raw = NMS.instance.rawMessageFromCraftChatMessage(read<Any>("a") ?: return null)
-            Components.parseRaw(raw)
+            val iChat = read<Any>("a") ?: return null
+            Components.parseRaw(NMS.instance.rawMessageFromCraftChatMessage(iChat))
         }
         else -> error("Unsupported packet $name")
     }

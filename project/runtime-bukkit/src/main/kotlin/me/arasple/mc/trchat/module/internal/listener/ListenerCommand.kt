@@ -39,6 +39,7 @@ object ListenerCommand {
                     || (!it.value.exact && cmd.substringBefore(' ').equals(it.key.substringBefore(' '), ignoreCase = true))
         }?.value ?: return
 
+        // 执行条件
         val condition = controller.condition?.replaceWithOrder(*subList(command, 1).toTypedArray())
         if (condition != null && !condition.toCondition().eval(player)) {
             e.isCancelled =  true
@@ -46,6 +47,7 @@ object ListenerCommand {
             return
         }
 
+        // 执行冷却
         val baffle = controller.baffle
         if (baffle != null && !baffle.hasNext(player.name) && !player.hasPermission("trchat.bypass.cmdcooldown")) {
             e.isCancelled =  true
@@ -53,6 +55,7 @@ object ListenerCommand {
             return
         }
 
+        // 执行跳转
         val relocate = controller.relocate?.map { it.replaceWithOrder(*subList(command, 1).toTypedArray()) }
         if (relocate != null) {
             e.isCancelled = true

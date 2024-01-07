@@ -9,13 +9,6 @@ import taboolib.common.util.asList
 import taboolib.library.configuration.Converter
 import java.util.*
 
-/**
- * Util
- * me.arasple.mc.trchat.util
- *
- * @author ItsFlicker
- * @since 2021/9/12 18:11
- */
 private val jsonParser = JsonParser()
 private val reportedErrors = mutableListOf<String>()
 val nilUUID = UUID(0, 0)

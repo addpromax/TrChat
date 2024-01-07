@@ -150,13 +150,8 @@ object BukkitProxyManager : ClientMessageManager {
         )
     }
 
-    fun sendRaw(recipient: Any?, to: String, component: ComponentText, doubleTransfer: Boolean) {
-        sendMessage(recipient, arrayOf(
-            "SendRaw",
-            to,
-            component.toRawMessage(),
-            doubleTransfer.toString())
-        )
+    fun sendPrivateRaw(recipient: Any?, to: String, from: String, component: ComponentText) {
+        sendMessage(recipient, arrayOf("ForwardMessage", "SendPrivateRaw", to, from, component.toRawMessage()))
     }
 
     fun updateNames() {

@@ -20,8 +20,6 @@ abstract class NMS {
 
     abstract fun sendMessage(receiver: Player, component: ComponentText, sender: UUID?)
 
-    abstract fun hoverItem(component: ComponentText, itemStack: ItemStack): ComponentText
-
     abstract fun optimizeNBT(itemStack: ItemStack, nbtWhitelist: Array<String> = whitelistTags): ItemStack
 
     abstract fun addCustomChatCompletions(player: Player, entries: List<String>)

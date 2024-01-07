@@ -124,10 +124,11 @@ object Loader {
             val filterBeforeSending = section.getBoolean("Filter-Before-Sending", false)
             val sendToDiscord = section.getBoolean("Send-To-Discord", !isPrivate)
             val receiveFromDiscord = section.getBoolean("Receive-From-Discord", true)
+            val discordChannel = section.getString("Discord-Channel", "")!!
             ChannelSettings(
                 joinPermission, speakCondition, autoJoin, isPrivate,
                 range, proxy, forceProxy, doubleTransfer, ports, disabledFunctions, filterBeforeSending,
-                sendToDiscord, receiveFromDiscord
+                sendToDiscord, receiveFromDiscord, discordChannel
             )
         }
 

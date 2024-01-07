@@ -33,7 +33,6 @@ object HookPlaceholderAPI : PlaceholderExpansion {
             val session = player.session
             val data = player.data
             return when (params[0].lowercase()) {
-//                "js" -> if (params.size > 1) JavaScriptAgent.eval(player, args.substringAfter('_')).get() else ""
                 "channel" -> session.channel
                 "lastpublicmessage", "lastmessage" -> {
                     if (params.getOrNull(1) == "uncolored") session.lastPublicMessage.uncolored()

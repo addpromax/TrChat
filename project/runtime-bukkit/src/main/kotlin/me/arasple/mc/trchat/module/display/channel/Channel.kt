@@ -10,6 +10,7 @@ import me.arasple.mc.trchat.module.display.channel.obj.ChannelSettings
 import me.arasple.mc.trchat.module.display.channel.obj.Range
 import me.arasple.mc.trchat.module.display.format.Format
 import me.arasple.mc.trchat.module.internal.data.ChatLogs
+import me.arasple.mc.trchat.module.internal.hook.HookPlugin
 import me.arasple.mc.trchat.module.internal.service.Metrics
 import me.arasple.mc.trchat.util.*
 import org.bukkit.command.CommandSender
@@ -155,7 +156,13 @@ open class Channel(
             session.cancelChat = false
             return null
         }
-        // TODO: 跨服事件传递
+        if (settings.sendToDiscord) {
+            HookPlugin.getDiscordSRV().sendMessage(
+                player,
+                TrChat.api().getFilterManager().filter(component.toLegacyText(), adaptPlayer(player)).filtered,
+                settings.discordChannel.takeIf { it.isNotEmpty() }
+            )
+        }
         // Proxy
         if (settings.proxy) {
             if (BukkitProxyManager.processor != null || settings.forceProxy) {

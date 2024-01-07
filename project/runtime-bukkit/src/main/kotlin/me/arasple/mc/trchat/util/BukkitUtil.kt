@@ -19,7 +19,7 @@ import taboolib.module.ui.MenuHolder
 import taboolib.module.ui.type.Basic
 import taboolib.platform.util.sendLang
 
-val isDragonCoreHooked by unsafeLazy { Bukkit.getPluginManager().isPluginEnabled("DragonCore") && MinecraftVersion.major < 8  }
+val isDragonCoreHooked by unsafeLazy { Bukkit.getPluginManager().isPluginEnabled("DragonCore") && MinecraftVersion.isLower(MinecraftVersion.V1_16)  }
 
 fun createNoClickChest(rows: Int, title: String) =
     MenuHolder(object : Basic(title) {

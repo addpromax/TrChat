@@ -17,6 +17,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BlockStateMeta
+import taboolib.common.UnsupportedVersionException
 import taboolib.common.io.digest
 import taboolib.common.platform.Platform
 import taboolib.common.platform.PlatformSide
@@ -31,9 +32,7 @@ import taboolib.module.chat.Components
 import taboolib.module.chat.impl.DefaultComponent
 import taboolib.module.configuration.ConfigNode
 import taboolib.module.configuration.ConfigNodeTransfer
-import taboolib.module.nms.MinecraftVersion
-import taboolib.module.nms.getI18nName
-import taboolib.module.nms.getLocaleKey
+import taboolib.module.nms.*
 import taboolib.module.ui.buildMenu
 import taboolib.module.ui.type.Basic
 import taboolib.module.ui.type.Linked
@@ -101,16 +100,14 @@ object ItemShow : Function("ITEM") {
 
     override fun parseVariable(sender: Player, arg: String): ComponentText? {
         val item = sender.inventory.getItem(arg.toInt() - 1) ?: ItemStack(Material.AIR)
-        val newItem = (item).let {
-            if (compatible) {
-                buildItem(it) { material = Material.STONE }
-            } else {
-                var newItem = it.clone()
-                HookPlugin.registry.filterIsInstance(HookDisplayItem::class.java).forEach { element ->
-                    newItem = element.displayItem(newItem, sender)
-                }
-                newItem
+        val newItem = if (compatible) {
+            buildItem(item) { material = Material.STONE }
+        } else {
+            var newItem = item.clone()
+            HookPlugin.registry.filterIsInstance<HookDisplayItem>().forEach { element ->
+                newItem = element.displayItem(newItem, sender)
             }
+            newItem
         }
 
         return cacheComponent.get(newItem) {
@@ -126,25 +123,23 @@ object ItemShow : Function("ITEM") {
                     )
                     it.first
                 }
-                sender
-                    .getComponentFromLang("Function-Item-Show-Format-With-Hopper", newItem.amount, sha1) { type, i, part, proxySender ->
-                        val component = if (part.isVariable && part.text == "item") {
-                            newItem.getNameComponent(sender)
-                        } else {
-                            Components.text(part.text.translate(proxySender).replaceWithOrder(newItem.amount, sha1))
-                        }
-                        component.applyStyle(type, part, i, proxySender, newItem.amount, sha1).hoverItemFixed(newItem)
+                sender.getComponentFromLang("Function-Item-Show-Format-With-Hopper", newItem.amount, sha1) { type, i, part, proxySender ->
+                    val component = if (part.isVariable && part.text == "item") {
+                        item.getNameComponent(sender)
+                    } else {
+                        Components.text(part.text.translate(proxySender).replaceWithOrder(newItem.amount, sha1))
                     }
+                    component.applyStyle(type, part, i, proxySender, newItem.amount, sha1).hoverItemFixed(newItem)
+                }
             } else {
-                sender
-                    .getComponentFromLang("Function-Item-Show-Format-New", newItem.amount) { type, i, part, proxySender ->
-                        val component = if (part.isVariable && part.text == "item") {
-                            item.getNameComponent(sender)
-                        } else {
-                            Components.text(part.text.translate(proxySender).replaceWithOrder(newItem.amount))
-                        }
-                        component.applyStyle(type, part, i, proxySender, newItem.amount).hoverItemFixed(newItem)
+                sender.getComponentFromLang("Function-Item-Show-Format-New", newItem.amount) { type, i, part, proxySender ->
+                    val component = if (part.isVariable && part.text == "item") {
+                        item.getNameComponent(sender)
+                    } else {
+                        Components.text(part.text.translate(proxySender).replaceWithOrder(newItem.amount))
                     }
+                    component.applyStyle(type, part, i, proxySender, newItem.amount).hoverItemFixed(newItem)
+                }
             }
         }
     }
@@ -202,10 +197,14 @@ object ItemShow : Function("ITEM") {
     @Suppress("Deprecation")
     private fun ItemStack.getNameComponent(player: Player): ComponentText {
         return if (originName || itemMeta?.hasDisplayName() != true) {
-            if (MinecraftVersion.major >= 7) {
-                Components.empty().appendTranslation(getLocaleKey().path)
-            } else {
-                Components.text(getI18nName(player))
+            try {
+                if (MinecraftVersion.isHigherOrEqual(MinecraftVersion.V1_15)) {
+                    Components.translation(getLocaleKey().path)
+                } else {
+                    Components.text(getI18nName(player))
+                }
+            } catch (_: UnsupportedVersionException) {
+                Components.text(nmsProxy<NMSItem>().getKey(this))
             }
         } else {
             try {

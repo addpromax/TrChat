@@ -23,17 +23,20 @@ class MsgComponent(val defaultColor: List<Pair<CustomColor, Condition?>>, style:
         val component = Components.empty()
         var message = msg
 
+        // 非玩家 不处理functions
         if (sender !is Player) {
             val defaultColor = defaultColor[0].first
             return toTextComponent(sender, defaultColor.colored(sender, message))
         }
 
+        // 创建{{xxx:xxx}}
         Function.functions.filter { it.alias !in disabledFunctions && it.canUse(sender) }.forEach {
             message = it.createVariable(sender, message)
         }
 
         val defaultColor = sender.session.getColor(defaultColor.firstOrNull { it.second.pass(sender) }?.first)
 
+        // 分割为多个ComponentText
         for (part in parser.readToFlatten(message)) {
             if (part.isVariable) {
                 val args = part.text.split(":", limit = 2)

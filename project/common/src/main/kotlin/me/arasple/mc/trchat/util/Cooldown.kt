@@ -3,10 +3,6 @@ package me.arasple.mc.trchat.util
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
-/**
- * @author ItsFlicker
- * @since 2022/3/5 14:09
- */
 object Cooldowns {
 
     private val COOLDOWNS = ConcurrentHashMap<UUID, Cooldown>()

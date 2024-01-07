@@ -77,15 +77,6 @@ class NMSImpl : NMS() {
         }
     }
 
-    override fun hoverItem(component: ComponentText, itemStack: ItemStack): ComponentText {
-        val nmsItem = CraftItemStack19.asNMSCopy(itemStack)
-        val nbtTag = NBTTagCompound19()
-        nmsItem.save(nbtTag)
-        val id = nbtTag.getString("id") ?: "minecraft:air"
-        val nbt = nbtTag.get("tag")?.toString() ?: "{}"
-        return component.hoverItem(id, nbt)
-    }
-
     override fun optimizeNBT(itemStack: ItemStack, nbtWhitelist: Array<String>): ItemStack {
         if (itemStack.isAir()) return itemStack
         try {

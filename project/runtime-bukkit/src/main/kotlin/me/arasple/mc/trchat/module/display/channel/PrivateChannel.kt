@@ -64,7 +64,12 @@ class PrivateChannel(
                 }
                 dynamic("player", optional = true) {
                     suggest {
-                        BukkitProxyManager.getPlayerNames().keys.filter { it !in PlayerData.vanishing }
+                        BukkitProxyManager.getPlayerNames().flatMap { (key, value) ->
+                            if (key !in PlayerData.vanishing) {
+                                if (value == null || key == value) listOf(key) else listOf(key, value)
+                            }
+                            else emptyList()
+                        }
                     }
                     execute<Player> { sender, _, argument ->
                         sender.session.lastPrivateTo = BukkitProxyManager.getExactName(argument)
@@ -154,11 +159,11 @@ class PrivateChannel(
         Metrics.increase(0)
 
         if (settings.proxy && BukkitProxyManager.processor != null) {
-            BukkitProxyManager.sendRaw(
+            BukkitProxyManager.sendPrivateRaw(
                 player,
                 to,
-                receive,
-                settings.doubleTransfer
+                player.name,
+                receive
             )
             BukkitProxyManager.sendProxyLang(player, to, "Private-Message-Receive", player.name)
         } else {

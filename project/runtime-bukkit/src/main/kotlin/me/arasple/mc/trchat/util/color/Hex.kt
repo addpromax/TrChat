@@ -245,11 +245,11 @@ object Hex {
      * @return The closest ChatColor value
      */
     private fun translateHex(hex: String): String {
-        return if (MinecraftVersion.majorLegacy >= 11600) ChatColor.of(hex).toString() else translateHex(Color.decode(hex))
+        return if (MinecraftVersion.isHigherOrEqual(MinecraftVersion.V1_16)) ChatColor.of(hex).toString() else translateHex(Color.decode(hex))
     }
 
     private fun translateHex(color: Color): String {
-        if (MinecraftVersion.majorLegacy >= 11600) return ChatColor.of(color).toString()
+        if (MinecraftVersion.isHigherOrEqual(MinecraftVersion.V1_16)) return ChatColor.of(color).toString()
         var minDist = Int.MAX_VALUE
         var legacy = ChatColor.WHITE
         for (mapping in ChatColorHexMapping.entries) {
@@ -310,7 +310,7 @@ object Hex {
         protected var step: Long
         override fun next(): Color {
             // Gradients will use the first color if the entire spectrum won't be available to preserve prettiness
-            if (MinecraftVersion.majorLegacy < 11600 || steps <= 1) return gradients[0].colorAt(0)
+            if (MinecraftVersion.isLower(MinecraftVersion.V1_16) || steps <= 1) return gradients[0].colorAt(0)
 
             // Do some wizardry to get a function that bounces back and forth between 0 and a cap given an increasing input
             // Thanks to BomBardyGamer for assisting with this

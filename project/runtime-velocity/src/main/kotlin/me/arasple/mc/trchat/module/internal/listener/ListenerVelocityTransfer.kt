@@ -1,7 +1,6 @@
 package me.arasple.mc.trchat.module.internal.listener
 
 import com.velocitypowered.api.event.connection.PluginMessageEvent
-import com.velocitypowered.api.proxy.Player
 import com.velocitypowered.api.proxy.ServerConnection
 import me.arasple.mc.trchat.api.impl.VelocityChannelManager
 import me.arasple.mc.trchat.api.impl.VelocityProxyManager
@@ -15,7 +14,6 @@ import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer
 import taboolib.common.platform.Platform
 import taboolib.common.platform.PlatformSide
 import taboolib.common.platform.event.SubscribeEvent
-import taboolib.common.platform.function.getProxyPlayer
 import java.io.IOException
 
 /**
@@ -47,13 +45,6 @@ object ListenerVelocityTransfer {
         when (data[0]) {
             "ForwardMessage" -> {
                 VelocityProxyManager.sendMessageToAll(*data)
-            }
-            "SendRaw" -> {
-                val to = data[1]
-                val raw = data[2]
-                val player = getProxyPlayer(to)?.cast<Player>() ?: return
-
-                player.sendMessage(GsonComponentSerializer.gson().deserialize(raw))
             }
             "BroadcastRaw" -> {
                 val uuid = data[1]

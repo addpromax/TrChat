@@ -45,7 +45,7 @@ object ListenerPackets {
      * 记录玩家收到的消息
      */
     @SubscribeEvent
-    fun recall(e: PacketSendEvent) {
+    fun record(e: PacketSendEvent) {
         val session = ChatSession.sessions[e.player.uniqueId] ?: return
         when (e.packet.name) {
             "ClientboundSystemChatPacket" -> {

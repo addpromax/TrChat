@@ -33,16 +33,18 @@ object CommandReply {
             dynamic("message") {
                 execute<Player> { sender, _, argument ->
                     val session = sender.session
-                    if (sender.checkMute()) {
-                        if (lastMessageFrom.containsKey(sender.name)) {
-                            val to = BukkitProxyManager.getExactName(lastMessageFrom[sender.name]!!)
-                                ?: return@execute sender.sendLang("Command-Player-Not-Exist")
-                            session.lastPrivateTo = to
-                            Channel.channels.values
-                                .firstOrNull { it is PrivateChannel && sender.passPermission(it.settings.joinPermission) }
-                                ?.execute(sender, argument)
-                        }
+                    if (!sender.checkMute()) {
+                        return@execute
                     }
+                    if (!lastMessageFrom.containsKey(sender.name)) {
+                        return@execute sender.sendLang("Command-Player-Not-Exist")
+                    }
+                    val to = BukkitProxyManager.getExactName(lastMessageFrom[sender.name]!!)
+                        ?: return@execute sender.sendLang("Command-Player-Not-Exist")
+                    session.lastPrivateTo = to
+                    Channel.channels.values
+                        .firstOrNull { it is PrivateChannel && sender.passPermission(it.settings.joinPermission) }
+                        ?.execute(sender, argument)
                 }
             }
             incorrectSender { sender, _ ->

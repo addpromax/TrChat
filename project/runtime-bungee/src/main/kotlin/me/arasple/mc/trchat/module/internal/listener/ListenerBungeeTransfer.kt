@@ -13,7 +13,6 @@ import taboolib.common.platform.Platform
 import taboolib.common.platform.PlatformSide
 import taboolib.common.platform.event.SubscribeEvent
 import taboolib.common.platform.function.console
-import taboolib.common.platform.function.getProxyPlayer
 import taboolib.common.platform.function.server
 import taboolib.module.chat.Components
 import java.io.IOException
@@ -51,13 +50,6 @@ object ListenerBungeeTransfer {
         when (data[0]) {
             "ForwardMessage" -> {
                 BungeeProxyManager.sendMessageToAll(*data)
-            }
-            "SendRaw" -> {
-                val to = data[1]
-                val raw = data[2]
-                val player = getProxyPlayer(to) ?: return
-
-                BungeeComponentManager.sendComponent(player, Components.parseRaw(raw))
             }
             "BroadcastRaw" -> {
                 val uuid = data[1]

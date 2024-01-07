@@ -14,10 +14,6 @@ import java.net.URL
 import java.nio.charset.StandardCharsets
 import java.util.*
 
-/**
- * @author Arasple
- * @date 2019/11/29 21:04
- */
 @SkipTo(LifeCycle.LOAD)
 object Updater {
 

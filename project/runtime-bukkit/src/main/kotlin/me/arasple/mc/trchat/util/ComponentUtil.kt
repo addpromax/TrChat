@@ -11,10 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta
 import taboolib.module.chat.ComponentText
 import taboolib.module.chat.component
 import taboolib.module.nms.getI18nName
-import taboolib.platform.util.isAir
-import taboolib.platform.util.isNotAir
-import taboolib.platform.util.modifyLore
-import taboolib.platform.util.modifyMeta
+import taboolib.platform.util.*
 
 fun String.parseSimple() = component().build {
     transform { it.colorify() }
@@ -23,7 +20,7 @@ fun String.parseSimple() = component().build {
 fun ComponentText.hoverItemFixed(item: ItemStack): ComponentText {
     var newItem = item.optimizeShulkerBox()
     newItem = NMS.instance.optimizeNBT(newItem)
-    return NMS.instance.hoverItem(this, newItem)
+    return hoverItem(newItem)
 }
 
 @Suppress("Deprecation")

@@ -26,7 +26,7 @@ class Text(val content: String, val condition: Condition?) {
             if (dynamic) {
                 text = text.setPlaceholders(sender)
             }
-            text = HookPlugin.getItemsAdder().replaceFontImages(text, sender as? Player)
+            text = HookPlugin.getItemsAdder().replaceFontImages(text, null)
         }
         return Components.text(text.replaceWithOrder(*vars).colorify())
     }

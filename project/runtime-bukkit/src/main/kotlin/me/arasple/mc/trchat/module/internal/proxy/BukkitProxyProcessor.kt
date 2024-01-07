@@ -8,6 +8,7 @@ import me.arasple.mc.trchat.module.display.function.standard.EnderChestShow
 import me.arasple.mc.trchat.module.display.function.standard.InventoryShow
 import me.arasple.mc.trchat.module.display.function.standard.ItemShow
 import me.arasple.mc.trchat.module.internal.TrChatBukkit
+import me.arasple.mc.trchat.module.internal.command.main.CommandReply
 import me.arasple.mc.trchat.module.internal.proxy.redis.RedisManager
 import me.arasple.mc.trchat.module.internal.proxy.redis.TrRedisMessage
 import me.arasple.mc.trchat.util.*
@@ -68,11 +69,13 @@ sealed interface BukkitProxyProcessor : PluginMessageListener {
                 } catch (_: IllegalStateException) {
                 }
             }
-            "SendRaw" -> {
+            "SendPrivateRaw" -> {
                 val to = data[1]
-                val raw = data[2]
+                val from = data[2]
+                val raw = data[3]
                 val message = Components.parseRaw(raw)
 
+                CommandReply.lastMessageFrom[to] = from
                 getProxyPlayer(to)?.sendComponent(null, message)
             }
             "BroadcastRaw" -> {

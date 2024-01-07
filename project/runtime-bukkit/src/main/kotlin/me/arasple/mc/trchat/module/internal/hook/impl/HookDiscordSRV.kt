@@ -4,11 +4,9 @@ import github.scarsz.discordsrv.DiscordSRV
 import github.scarsz.discordsrv.api.Subscribe
 import github.scarsz.discordsrv.api.events.DiscordGuildMessagePreBroadcastEvent
 import github.scarsz.discordsrv.api.events.GameChatMessagePreProcessEvent
-import me.arasple.mc.trchat.TrChat
 import me.arasple.mc.trchat.module.internal.hook.HookAbstract
 import me.arasple.mc.trchat.util.session
 import org.bukkit.entity.Player
-import taboolib.common.platform.function.adaptPlayer
 
 class HookDiscordSRV : HookAbstract() {
 
@@ -17,10 +15,7 @@ class HookDiscordSRV : HookAbstract() {
         DiscordSRV.api.subscribe(object {
             @Subscribe
             fun onChatPreProcess(e: GameChatMessagePreProcessEvent) {
-                val channel = e.player.session.lastChannel ?: return
-                if (channel.settings.sendToDiscord) {
-                    e.message = TrChat.api().getFilterManager().filter(e.message, adaptPlayer(e.player)).filtered
-                } else {
+                if (e.player.session.lastChannel != null && e.triggeringBukkitEvent != null) {
                     e.isCancelled = true
                 }
             }
@@ -31,6 +26,16 @@ class HookDiscordSRV : HookAbstract() {
                 }
             }
         })
+    }
+
+    fun sendMessage(player: Player, message: String, channel: String?) {
+        if (!isHooked) return
+        DiscordSRV.getPlugin().processChatMessage(
+            player,
+            message,
+            channel,
+            false
+        )
     }
 
 }

@@ -14,6 +14,11 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2" apply false
 }
 
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
 subprojects {
     apply<JavaPlugin>()
     apply(plugin = "org.jetbrains.kotlin.jvm")

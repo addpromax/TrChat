@@ -19,5 +19,6 @@ class ChannelSettings(
     val disabledFunctions: List<String> = emptyList(),
     val filterBeforeSending: Boolean = false,
     val sendToDiscord: Boolean = true,
-    val receiveFromDiscord: Boolean = true
+    val receiveFromDiscord: Boolean = true,
+    val discordChannel: String = ""
 )

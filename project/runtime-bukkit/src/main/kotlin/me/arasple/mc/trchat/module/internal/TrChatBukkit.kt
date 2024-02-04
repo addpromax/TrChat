@@ -11,13 +11,14 @@ import me.arasple.mc.trchat.module.display.function.Function
 import me.arasple.mc.trchat.module.internal.data.PlayerData
 import me.arasple.mc.trchat.module.internal.hook.HookPlugin
 import org.bukkit.Bukkit
+import taboolib.common.LifeCycle
 import taboolib.common.platform.*
 import taboolib.common.platform.function.console
 import taboolib.common.platform.function.pluginVersion
 import taboolib.module.lang.sendLang
 import taboolib.module.nms.MinecraftVersion.majorLegacy
 
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object TrChatBukkit : Plugin() {
 
     var isPaperEnv = false
@@ -25,7 +26,7 @@ object TrChatBukkit : Plugin() {
 
     var isGlobalMuting = false
 
-    @Awake
+    @Awake(LifeCycle.CONST)
     internal fun detectPaperEnv() {
         try {
             // Paper 1.16.5+

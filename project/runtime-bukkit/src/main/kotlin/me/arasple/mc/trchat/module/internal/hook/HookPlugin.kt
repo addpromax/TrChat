@@ -17,7 +17,7 @@ import java.util.function.BiFunction
  * @author Arasple
  * @date 2021/1/26 22:04
  */
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object HookPlugin {
 
     val registry = arrayListOf(

@@ -23,7 +23,7 @@ import java.io.IOException
  * @author ItsFlicker
  * @since 2021/8/21 13:29
  */
-@PlatformSide([Platform.VELOCITY])
+@PlatformSide(Platform.VELOCITY)
 object ListenerVelocityTransfer {
 
     @SubscribeEvent

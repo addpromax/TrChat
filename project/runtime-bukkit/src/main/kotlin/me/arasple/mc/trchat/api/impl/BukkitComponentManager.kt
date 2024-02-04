@@ -25,7 +25,7 @@ import java.util.*
  * @author ItsFlicker
  * @since 2022/6/8 12:56
  */
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object BukkitComponentManager : ComponentManager {
 
     @ConfigNode("Enable.Chat", "filter.yml")

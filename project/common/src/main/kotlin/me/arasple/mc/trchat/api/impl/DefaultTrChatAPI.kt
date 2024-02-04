@@ -2,6 +2,7 @@ package me.arasple.mc.trchat.api.impl
 
 import me.arasple.mc.trchat.TrChat
 import me.arasple.mc.trchat.api.*
+import taboolib.common.LifeCycle
 import taboolib.common.platform.Awake
 import taboolib.common.platform.PlatformFactory
 
@@ -9,10 +10,10 @@ import taboolib.common.platform.PlatformFactory
  * @author ItsFlicker
  * @since 2022/6/18 15:26
  */
-@Awake
 object DefaultTrChatAPI : TrChatAPI {
 
-    init {
+    @Awake(LifeCycle.CONST)
+    fun init() {
         TrChat.register(this)
     }
 

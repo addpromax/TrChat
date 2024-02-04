@@ -8,7 +8,7 @@ import taboolib.common.platform.PlatformSide
  * @author Arasple
  * @date 2019/8/15 20:52
  */
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object MessageColors {
 
     const val COLOR_PERMISSION_NODE = "trchat.color."

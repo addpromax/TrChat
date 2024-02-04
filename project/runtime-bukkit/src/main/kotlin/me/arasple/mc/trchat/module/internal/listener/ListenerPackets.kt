@@ -13,7 +13,7 @@ import taboolib.module.nms.PacketSendEvent
  * @author Arasple
  * @date 2019/11/30 10:16
  */
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object ListenerPackets {
 
     @ConfigNode("Options.Cheat-Client-Secure-Chat", "settings.yml")

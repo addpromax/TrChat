@@ -27,7 +27,7 @@ import taboolib.module.configuration.ConfigNode
 import taboolib.module.configuration.ConfigNodeTransfer
 import taboolib.module.nms.MinecraftVersion
 import taboolib.module.ui.buildMenu
-import taboolib.module.ui.type.Linked
+import taboolib.module.ui.type.PageableChest
 import taboolib.platform.util.*
 
 /**
@@ -35,7 +35,7 @@ import taboolib.platform.util.*
  * @since 2022/3/18 19:14
  */
 @StandardFunction
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object EnderChestShow : Function("ENDERCHEST") {
 
     override val alias = "EnderChest-Show"
@@ -111,7 +111,7 @@ object EnderChestShow : Function("ENDERCHEST") {
         if (cache.getIfPresent(sha1) != null) {
             return sha1 to cache.getIfPresent(sha1)!!.serializeToByteArray().encodeBase64()
         }
-        val menu = buildMenu<Linked<ItemStack>>(sender.asLangText("Function-EnderChest-Show-Title", sender.name)) {
+        val menu = buildMenu<PageableChest<ItemStack>>(sender.asLangText("Function-EnderChest-Show-Title", sender.name)) {
             rows(3)
             slots((0..26).toList())
             elements { (0..26).map { inventory.getItem(it).replaceAir() } }

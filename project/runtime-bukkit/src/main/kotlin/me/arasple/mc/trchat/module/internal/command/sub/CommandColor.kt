@@ -11,7 +11,7 @@ import taboolib.common.platform.command.subCommand
  * @author ItsFlicker
  * @since 2022/6/15 17:49
  */
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object CommandColor {
 
     val command = subCommand {

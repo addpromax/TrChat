@@ -25,7 +25,7 @@ import taboolib.platform.util.sendLang
  * @since 2022/3/18 19:14
  */
 @StandardFunction
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object MentionAll : Function("MENTIONALL") {
 
     override val alias = "Mention-All"

@@ -9,7 +9,7 @@ import taboolib.common.platform.Platform
 import taboolib.common.platform.PlatformSide
 import taboolib.module.kether.*
 
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 internal object KetherActions {
 
     @KetherParser(["channel"], namespace = "trchat", shared = true)

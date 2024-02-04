@@ -14,7 +14,7 @@ import taboolib.platform.util.onlinePlayers
  * @author ItsFlicker
  * @since 2021/8/11 12:08
  */
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object CommandRecallMessage {
 
     val command = subCommand {

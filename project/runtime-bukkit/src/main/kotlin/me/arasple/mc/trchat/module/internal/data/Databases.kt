@@ -13,7 +13,7 @@ import taboolib.expansion.setupPlayerDatabase
  * @author ItsFlicker
  * @since 2021/9/11 13:29
  */
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object Databases {
 
     @Awake(LifeCycle.ENABLE)

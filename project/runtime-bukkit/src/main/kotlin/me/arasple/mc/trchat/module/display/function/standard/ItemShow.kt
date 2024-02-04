@@ -34,8 +34,8 @@ import taboolib.module.configuration.ConfigNode
 import taboolib.module.configuration.ConfigNodeTransfer
 import taboolib.module.nms.*
 import taboolib.module.ui.buildMenu
-import taboolib.module.ui.type.Basic
-import taboolib.module.ui.type.Linked
+import taboolib.module.ui.type.Chest
+import taboolib.module.ui.type.PageableChest
 import taboolib.platform.util.*
 
 /**
@@ -43,7 +43,7 @@ import taboolib.platform.util.*
  * @since 2022/3/12 19:14
  */
 @StandardFunction
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object ItemShow : Function("ITEM") {
 
     override val alias = "Item-Show"
@@ -170,7 +170,7 @@ object ItemShow : Function("ITEM") {
             val blockStateMeta = item.itemMeta!! as BlockStateMeta
             val shulkerBox = blockStateMeta.blockState as ShulkerBox
             val shulkerInv = shulkerBox.inventory
-            buildMenu<Linked<ItemStack>>(sender.asLangText("Function-Item-Show-Title", sender.name)) {
+            buildMenu<PageableChest<ItemStack>>(sender.asLangText("Function-Item-Show-Title", sender.name)) {
                 rows(3)
                 slots((0..26).toList())
                 elements { (0..26).map { shulkerInv.getItem(it).replaceAir() } }
@@ -178,7 +178,7 @@ object ItemShow : Function("ITEM") {
                 onClick(lock = true)
             }
         } else {
-            buildMenu<Basic>(sender.asLangText("Function-Item-Show-Title", sender.name)) {
+            buildMenu<Chest>(sender.asLangText("Function-Item-Show-Title", sender.name)) {
                 rows(3)
                 map(
                     "xxxxxxxxx",

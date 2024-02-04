@@ -1,9 +1,3 @@
-val taboolib_version: String by project
-
-plugins {
-    id("io.izzel.taboolib") version "1.56"
-}
-
 repositories {
     maven("https://nexus.scarsz.me/content/groups/public/")
 }
@@ -14,36 +8,13 @@ dependencies {
     compileOnly(project(":project:module-nms"))
     compileOnly("ink.ptms.core:v12004:12004:universal")
     compileOnly("net.md-5:bungeecord-api:1.20-R0.1-SNAPSHOT")
+    compileOnly(fileTree("libs"))
 
-    compileOnly("me.clip:placeholderapi:2.11.3") { isTransitive = false }
+    compileOnly("me.clip:placeholderapi:2.11.5") { isTransitive = false }
     compileOnly("com.discordsrv:discordsrv:1.26.0") { isTransitive = false }
     compileOnly("com.willfp:eco:6.35.1") { isTransitive = false }
     compileOnly("com.github.LoneDev6:api-itemsadder:3.6.2-beta-r3-b") { isTransitive = false }
     compileOnly("xyz.xenondevs.nova:nova-api:0.12.13") { isTransitive = false }
 }
 
-taboolib {
-    description {
-        name(rootProject.name)
-        desc("Advanced Minecraft Chat Control")
-        links {
-            name("homepage").url("https://trchat.trixey.cc/")
-        }
-        contributors {
-            name("Arasple")
-            name("ItsFlicker")
-        }
-        dependencies {
-            name("PlaceholderAPI").with("bukkit")
-            name("DiscordSRV").with("bukkit").optional(true)
-            name("EcoEnchants").with("bukkit").optional(true)
-            name("ItemsAdder").with("bukkit").optional(true)
-            name("Nova").with("bukkit").optional(true)
-            name("Multiverse-Core").loadafter(true)
-        }
-    }
-    install("common", "platform-bukkit")
-    options("skip-minimize", "keep-kotlin-module", "skip-taboolib-relocate")
-    classifier = null
-    version = taboolib_version
-}
+taboolib { subproject = true }

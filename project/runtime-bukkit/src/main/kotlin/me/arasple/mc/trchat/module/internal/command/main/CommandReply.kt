@@ -22,7 +22,7 @@ import taboolib.platform.util.sendLang
  * @author ItsFlicker
  * @since 2021/7/21 11:14
  */
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object CommandReply {
 
     val lastMessageFrom = HashMap<String, String>()

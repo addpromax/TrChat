@@ -21,7 +21,7 @@ import taboolib.platform.util.sendLang
  * @author ItsFlicker
  * @date 2019/11/30 12:10
  */
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object ListenerBukkitChat {
 
     @ConfigNode("Options.Always-Cancel-Chat-Event", "settings.yml")

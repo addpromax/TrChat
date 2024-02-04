@@ -20,7 +20,7 @@ import taboolib.platform.util.sendLang
  * @author ItsFlicker
  * @since 2022/2/6 15:01
  */
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object CommandIgnore {
 
     @Awake(LifeCycle.ENABLE)

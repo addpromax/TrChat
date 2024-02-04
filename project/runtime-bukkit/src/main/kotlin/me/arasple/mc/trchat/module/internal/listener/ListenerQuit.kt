@@ -14,7 +14,7 @@ import taboolib.expansion.releaseDataContainer
  * @author ItsFlicker
  * @since 2021/12/11 23:19
  */
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object ListenerQuit {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

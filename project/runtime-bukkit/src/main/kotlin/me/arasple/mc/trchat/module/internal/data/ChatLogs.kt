@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit
  * @author Arasple
  * @date 2019/11/30 16:08
  */
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object ChatLogs {
 
     private val waveList = mutableListOf<String>()

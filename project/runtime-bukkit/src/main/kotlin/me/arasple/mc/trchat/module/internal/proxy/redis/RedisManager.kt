@@ -12,7 +12,7 @@ import taboolib.expansion.SingleRedisConnector
 import taboolib.expansion.fromConfig
 import taboolib.module.configuration.ConfigNode
 
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object RedisManager {
 
     private var connector: SingleRedisConnector? = null

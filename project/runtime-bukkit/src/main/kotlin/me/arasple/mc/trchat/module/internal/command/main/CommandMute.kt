@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat
  * @author ItsFlicker
  * @since 2021/7/21 10:40
  */
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object CommandMute {
 
     val muteDateFormat = SimpleDateFormat()

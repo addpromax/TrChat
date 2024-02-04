@@ -14,7 +14,7 @@ import kotlin.math.*
  * @author Esophose
  * converted from https://github.com/Rosewood-Development/RoseGarden/blob/master/src/main/java/dev/rosewood/rosegarden/utils/HexUtils.java
  */
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object Hex {
 
     private const val CHARS_UNTIL_LOOP = 30
@@ -252,7 +252,7 @@ object Hex {
         if (MinecraftVersion.isHigherOrEqual(MinecraftVersion.V1_16)) return ChatColor.of(color).toString()
         var minDist = Int.MAX_VALUE
         var legacy = ChatColor.WHITE
-        for (mapping in ChatColorHexMapping.entries) {
+        for (mapping in ChatColorHexMapping.values()) {
             val r = mapping.red - color.red
             val g = mapping.green - color.green
             val b = mapping.blue - color.blue

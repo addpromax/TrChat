@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit
  * @author ItsFlicker
  * @since 2021/12/12 11:40
  */
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object Functions {
 
     @Config("function.yml", autoReload = true)

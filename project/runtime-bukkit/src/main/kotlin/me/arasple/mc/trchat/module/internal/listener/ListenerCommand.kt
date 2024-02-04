@@ -16,7 +16,7 @@ import taboolib.platform.util.sendLang
  * @author ItsFlicker
  * @date 2020/1/16 21:41
  */
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object ListenerCommand {
 
     @SubscribeEvent(priority = EventPriority.LOWEST, ignoreCancelled = true)

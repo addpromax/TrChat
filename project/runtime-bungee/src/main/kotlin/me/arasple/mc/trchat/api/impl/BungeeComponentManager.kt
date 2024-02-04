@@ -12,7 +12,7 @@ import taboolib.module.chat.Components
 import taboolib.module.chat.impl.DefaultComponent
 import java.util.*
 
-@PlatformSide([Platform.BUNGEE])
+@PlatformSide(Platform.BUNGEE)
 object BungeeComponentManager : ComponentManager {
 
     init {

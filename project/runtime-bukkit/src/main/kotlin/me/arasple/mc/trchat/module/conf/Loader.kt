@@ -44,7 +44,7 @@ import kotlin.system.measureTimeMillis
  * @author ItsFlicker
  * @since 2021/12/12 13:45
  */
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object Loader {
 
     private val folder by unsafeLazy {
@@ -77,28 +77,24 @@ object Loader {
 
         filterChannelFiles(folder).forEach {
             if (FileWatcher.INSTANCE.hasListener(it)) {
-                try {
-                    loadChannel(it.nameWithoutExtension, YamlConfiguration.loadConfiguration(it)).let { channel ->
-                        Channel.channels[channel.id] = channel
-                    }
-                } catch (t: Throwable) {
-                    t.print("Channel file ${it.name} loaded failed!")
-                }
+                loadChannel(it)
             } else {
-                FileWatcher.INSTANCE.addSimpleListener(it, {
-                    try {
-                        loadChannel(it.nameWithoutExtension, YamlConfiguration.loadConfiguration(it)).let { channel ->
-                            Channel.channels[channel.id] = channel
-                        }
-                    } catch (t: Throwable) {
-                        t.print("Channel file ${it.name} loaded failed!")
-                    }
-                }, true)
+                FileWatcher.INSTANCE.addSimpleListener(it, { loadChannel(it) }, true)
             }
         }
 
         TrChatReloadEvent.Channel(Channel.channels).call()
         return Channel.channels.size
+    }
+
+    fun loadChannel(file: File) {
+        try {
+            loadChannel(file.nameWithoutExtension, YamlConfiguration.loadConfiguration(file)).let { channel ->
+                Channel.channels[channel.id] = channel
+            }
+        } catch (t: Throwable) {
+            t.print("Channel file ${file.name} loaded failed!")
+        }
     }
 
     fun loadChannel(id: String, conf: YamlConfiguration): Channel {

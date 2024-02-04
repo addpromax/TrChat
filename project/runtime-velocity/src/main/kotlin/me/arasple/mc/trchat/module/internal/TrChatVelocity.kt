@@ -8,7 +8,6 @@ import taboolib.common.platform.Plugin
 import taboolib.common.platform.ProxyCommandSender
 import taboolib.common.platform.command.command
 import taboolib.common.platform.command.suggest
-import taboolib.common.platform.function.console
 import taboolib.common.platform.function.pluginVersion
 import taboolib.common.util.unsafeLazy
 import taboolib.module.lang.sendLang
@@ -21,14 +20,14 @@ import taboolib.platform.VelocityPlugin
  * @author ItsFlicker
  * @since 2021/8/21 13:42
  */
-@PlatformSide([Platform.VELOCITY])
+@PlatformSide(Platform.VELOCITY)
 object TrChatVelocity : Plugin() {
 
     val plugin by unsafeLazy { VelocityPlugin.getInstance() }
 
     override fun onLoad() {
-        console().sendLang("Plugin-Loading", plugin.server.version.version)
-        console().sendLang("Plugin-Proxy-Supported", "Velocity")
+        VelocityConsole().sendLang("Plugin-Loading", plugin.server.version.version)
+        VelocityConsole().sendLang("Plugin-Proxy-Supported", "Velocity")
     }
 
     override fun onEnable() {
@@ -44,8 +43,8 @@ object TrChatVelocity : Plugin() {
                 }
             }
         }
-        VelocityChannelManager.loadChannels(console())
-        console().sendLang("Plugin-Enabled", pluginVersion)
+        VelocityChannelManager.loadChannels(VelocityConsole())
+        VelocityConsole().sendLang("Plugin-Enabled", pluginVersion)
     }
 
 }

@@ -9,3 +9,5 @@ dependencies {
     compileOnly("ink.ptms:nms-all:1.0.0")
     compileOnly("com.velocitypowered:velocity-brigadier:1.0.0-SNAPSHOT")
 }
+
+taboolib { subproject = true }

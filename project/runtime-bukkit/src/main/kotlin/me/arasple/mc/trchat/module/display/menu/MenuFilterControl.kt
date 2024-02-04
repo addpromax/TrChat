@@ -8,7 +8,7 @@ import taboolib.common.platform.PlatformSide
 import taboolib.library.xseries.XMaterial
 import taboolib.library.xseries.XSound
 import taboolib.module.ui.openMenu
-import taboolib.module.ui.type.Basic
+import taboolib.module.ui.type.Chest
 import taboolib.platform.util.buildItem
 
 /**
@@ -16,13 +16,13 @@ import taboolib.platform.util.buildItem
  * @date 2019/11/30 11:40
  * Internal Menu For Chat Filter Control
  */
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object MenuFilterControl {
 
     private val SOUND = XSound.BLOCK_NOTE_BLOCK_PLING
 
     fun displayFor(player: Player) {
-        player.openMenu<Basic>("TrChat Filter") {
+        player.openMenu<Chest>("TrChat Filter") {
             rows(5)
             map(
                 "#########",

@@ -21,7 +21,7 @@ import taboolib.platform.compat.PlaceholderExpansion
  * @author Arasple
  * @since 2021/8/9 23:09
  */
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object HookPlaceholderAPI : PlaceholderExpansion {
 
     override val identifier: String

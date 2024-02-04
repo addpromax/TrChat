@@ -1,28 +1,11 @@
-val taboolib_version: String by project
-
-plugins {
-    id("io.izzel.taboolib") version "1.56"
-}
-
 dependencies {
     compileOnly(project(":project:common"))
-    compileOnly("com.velocitypowered:velocity-api:3.1.1")
+    compileOnly("com.velocitypowered:velocity-api:3.3.0-SNAPSHOT")
 }
 
-taboolib {
-    description {
-        name(rootProject.name)
-        desc("Advanced Minecraft Chat Control")
-        links {
-            name("homepage").url("https://trchat.trixey.cc/")
-        }
-        contributors {
-            name("Arasple")
-            name("ItsFlicker")
-        }
-    }
-    install("common", "platform-velocity")
-    options("skip-minimize", "keep-kotlin-module", "skip-taboolib-relocate")
-    classifier = null
-    version = taboolib_version
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
+
+taboolib { subproject = true }

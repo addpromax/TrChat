@@ -21,7 +21,7 @@ import javax.script.SimpleScriptContext
  * @author ItsFlicker
  * @since 2021/8/27 16:10
  */
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object JavaScriptAgent {
 
     private val prefixes = arrayOf(

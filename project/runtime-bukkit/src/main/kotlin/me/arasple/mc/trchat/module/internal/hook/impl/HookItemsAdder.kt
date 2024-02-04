@@ -11,10 +11,13 @@ import org.bukkit.entity.Player
 class HookItemsAdder : HookAbstract() {
 
     fun replaceFontImages(message: String, player: Player?): String {
-        return if (isHooked) {
-            FontImageWrapper.replaceFontImages(player, message)
+        if (!isHooked) {
+            return message
+        }
+        return if (player == null) {
+            FontImageWrapper.replaceFontImages(message)
         } else {
-            message
+            FontImageWrapper.replaceFontImages(player, message)
         }
     }
 }

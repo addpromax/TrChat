@@ -3,3 +3,5 @@ dependencies {
     compileOnly(project(":project:module-nms"))
     compileOnly("net.kyori:adventure-platform-bukkit:4.3.2")
 }
+
+taboolib { subproject = true }

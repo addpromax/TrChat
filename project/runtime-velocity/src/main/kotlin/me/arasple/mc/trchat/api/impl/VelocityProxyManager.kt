@@ -23,7 +23,7 @@ import java.util.concurrent.Future
  * @author ItsFlicker
  * @since 2022/6/18 19:21
  */
-@PlatformSide([Platform.VELOCITY])
+@PlatformSide(Platform.VELOCITY)
 object VelocityProxyManager : ProxyMessageManager {
 
     val incoming: MinecraftChannelIdentifier

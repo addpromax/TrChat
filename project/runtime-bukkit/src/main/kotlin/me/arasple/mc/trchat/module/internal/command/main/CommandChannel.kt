@@ -14,7 +14,7 @@ import taboolib.module.lang.sendLang
  * @author ItsFlicker
  * @since 2021/7/21 11:24
  */
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object CommandChannel {
 
     @Awake(LifeCycle.ENABLE)

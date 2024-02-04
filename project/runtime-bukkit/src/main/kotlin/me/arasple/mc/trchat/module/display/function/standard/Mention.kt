@@ -25,7 +25,7 @@ import taboolib.module.configuration.ConfigNodeTransfer
  * @since 2022/3/18 19:14
  */
 @StandardFunction
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object Mention : Function("MENTION") {
 
     override val alias = "Mention"

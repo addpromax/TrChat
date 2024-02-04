@@ -32,7 +32,7 @@ import java.util.concurrent.CompletableFuture
  * @since 2022/3/12 19:14
  */
 @StandardFunction
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object ImageShow : Function("IMAGE") {
 
     override val alias = "Image-Show"

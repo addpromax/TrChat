@@ -1,0 +1,10 @@
+{
+  "id": "trchat",
+  "name": "TrChat",
+  "main": "me.arasple.mc.trchat.taboolib.platform.VelocityPlugin",
+  "version": "2.0.12",
+  "authors": [
+    "Arasple",
+    "ItsFlicker"
+  ]
+}

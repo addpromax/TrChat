@@ -32,7 +32,7 @@ import java.util.concurrent.Future
  * @since 2022/6/18 15:43
  */
 @Suppress("Deprecation")
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object BukkitProxyManager : ClientMessageManager {
 
     override var port = 25565

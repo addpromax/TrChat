@@ -19,7 +19,7 @@ import taboolib.platform.util.modifyMeta
  * @author ItsFlicker
  * @date 2019/8/15 21:18
  */
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object ListenerAnvilChange {
 
     @ConfigNode("Enable.Anvil", "filter.yml")

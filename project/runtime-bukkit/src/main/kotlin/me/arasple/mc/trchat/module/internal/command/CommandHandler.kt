@@ -23,7 +23,7 @@ import taboolib.platform.util.sendLang
  * @author ItsFlicker
  * @since 2021/8/21 12:23
  */
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 @CommandHeader("trchat", ["trc"], "TrChat main command", permission = "trchat.access")
 object CommandHandler {
 

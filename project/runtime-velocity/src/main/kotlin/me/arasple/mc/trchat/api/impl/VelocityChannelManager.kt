@@ -21,7 +21,7 @@ import kotlin.system.measureTimeMillis
  * @author ItsFlicker
  * @since 2022/6/19 20:26
  */
-@PlatformSide([Platform.VELOCITY])
+@PlatformSide(Platform.VELOCITY)
 object VelocityChannelManager : ChannelManager {
 
     init {

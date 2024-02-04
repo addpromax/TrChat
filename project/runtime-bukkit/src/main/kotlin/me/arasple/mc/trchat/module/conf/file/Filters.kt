@@ -14,7 +14,7 @@ import taboolib.module.configuration.Configuration
  * @author ItsFlicker
  * @since 2022/2/4 13:04
  */
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object Filters {
 
     @Config("filter.yml")

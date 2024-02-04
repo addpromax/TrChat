@@ -23,7 +23,7 @@ import java.util.concurrent.Future
  * @author ItsFlicker
  * @since 2022/6/18 19:21
  */
-@PlatformSide([Platform.BUNGEE])
+@PlatformSide(Platform.BUNGEE)
 object BungeeProxyManager : ProxyMessageManager {
 
     init {

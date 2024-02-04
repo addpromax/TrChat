@@ -17,7 +17,7 @@ import taboolib.module.kether.Kether
  * @author ItsFlicker
  * @since 2021/12/11 23:59
  */
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object Settings {
 
     @Config("settings.yml")

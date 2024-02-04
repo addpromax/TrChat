@@ -12,7 +12,7 @@ import taboolib.module.configuration.ConfigNode
  * @author ItsFlicker
  * @date 2019/8/15 21:18
  */
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object ListenerBookEdit {
 
     @ConfigNode("Color.Book", "settings.yml")

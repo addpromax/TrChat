@@ -18,7 +18,7 @@ import taboolib.module.lang.sendLang
  * @author Arasple
  * @date 2019/8/4 22:42
  */
-@PlatformSide([Platform.BUNGEE])
+@PlatformSide(Platform.BUNGEE)
 object TrChatBungee : Plugin() {
 
     const val TRCHAT_CHANNEL = "trchat:main"

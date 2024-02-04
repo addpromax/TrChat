@@ -24,7 +24,7 @@ import java.io.IOException
  * @author ItsFlicker
  * @since 2021/8/9 15:01
  */
-@PlatformSide([Platform.BUNGEE])
+@PlatformSide(Platform.BUNGEE)
 object ListenerBungeeTransfer {
 
     @SubscribeEvent(level = 0)

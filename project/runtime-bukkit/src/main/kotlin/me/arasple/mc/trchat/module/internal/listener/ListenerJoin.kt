@@ -19,7 +19,7 @@ import taboolib.expansion.setupDataContainer
  * @author ItsFlicker
  * @since 2021/12/11 23:19
  */
-@PlatformSide([Platform.BUKKIT])
+@PlatformSide(Platform.BUKKIT)
 object ListenerJoin {
 
     private var hasFetched = false

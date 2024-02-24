@@ -8,10 +8,11 @@ import me.arasple.mc.trchat.module.internal.script.Condition
  */
 class ChannelSettings(
     val joinPermission: String = "",
+    val listenPermission: String = "",
     val speakCondition: Condition = Condition.EMPTY,
-    val autoJoin: Boolean = true,
+    val alwaysListen: Boolean = true,
     val isPrivate: Boolean = false,
-    val range: Range = Range(Range.Type.ALL, -1),
+    val range: ChannelRange = ChannelRange(ChannelRange.Type.ALL, -1),
     val proxy: Boolean = false,
     val forceProxy: Boolean = false,
     val doubleTransfer: Boolean = true,

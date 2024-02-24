@@ -4,13 +4,11 @@ import me.arasple.mc.trchat.TrChat
 import me.arasple.mc.trchat.api.event.TrChatEvent
 import me.arasple.mc.trchat.api.impl.BukkitProxyManager
 import me.arasple.mc.trchat.module.conf.file.Settings
-import me.arasple.mc.trchat.module.display.channel.obj.ChannelBindings
-import me.arasple.mc.trchat.module.display.channel.obj.ChannelEvents
-import me.arasple.mc.trchat.module.display.channel.obj.ChannelSettings
-import me.arasple.mc.trchat.module.display.channel.obj.Range
+import me.arasple.mc.trchat.module.display.channel.obj.*
 import me.arasple.mc.trchat.module.display.format.Format
+import me.arasple.mc.trchat.module.display.function.Function
 import me.arasple.mc.trchat.module.internal.data.ChatLogs
-import me.arasple.mc.trchat.module.internal.hook.HookPlugin
+import me.arasple.mc.trchat.module.internal.script.Condition
 import me.arasple.mc.trchat.module.internal.service.Metrics
 import me.arasple.mc.trchat.util.*
 import org.bukkit.command.CommandSender
@@ -21,8 +19,8 @@ import taboolib.common.platform.function.adaptPlayer
 import taboolib.common.platform.function.console
 import taboolib.common.platform.function.getProxyPlayer
 import taboolib.common.platform.function.unregisterCommand
+import taboolib.common.util.Strings
 import taboolib.common.util.subList
-import taboolib.module.chat.ComponentText
 import taboolib.module.chat.Components
 import taboolib.module.lang.sendLang
 import taboolib.platform.util.onlinePlayers
@@ -38,107 +36,106 @@ open class Channel(
     val bindings: ChannelBindings,
     val events: ChannelEvents,
     val formats: List<Format>,
-    val console: Format? = null,
-    val listeners: MutableSet<String> = mutableSetOf()
+    val consoleFormat: Format? = null
 ) {
 
-    init {
-        if (settings.autoJoin) {
+    val listeners: MutableSet<String> = mutableSetOf()
+
+    open fun init() {
+        registerCommand()
+        onlinePlayers.filter { it.session.channel == id }.forEach {
+            join(it, this, hint = false)
+        }
+        if (settings.alwaysListen) {
             onlinePlayers.forEach {
-                if (it.passPermission(settings.joinPermission)) {
+                if (canListen(it)) {
                     listeners.add(it.name)
                 }
             }
-        } else {
-            onlinePlayers.filter { it.session.channel == id }.forEach {
-                join(it, id, hint = false)
-            }
         }
-        if (!bindings.command.isNullOrEmpty()) {
-            command(
-                name = bindings.command[0],
-                aliases = subList(bindings.command, 1),
-                description = "TrChat channel $id",
-                permission = settings.joinPermission,
-                permissionDefault = if (settings.joinPermission.isEmpty()) PermissionDefault.TRUE else PermissionDefault.OP
-            ) {
-                execute<Player> { sender, _, _ ->
-                    if (sender.session.channel == this@Channel.id) {
-                        quit(sender)
+    }
+
+    open fun registerCommand() {
+        if (bindings.command.isNullOrEmpty()) return
+        command(
+            name = bindings.command[0],
+            aliases = subList(bindings.command, 1),
+            description = "TrChat channel $id",
+            permission = settings.joinPermission,
+            permissionDefault = if (settings.speakCondition != Condition.EMPTY) PermissionDefault.TRUE else PermissionDefault.OP
+        ) {
+            execute<Player> { sender, _, _ ->
+                if (sender.session.channel == this@Channel.id) {
+                    quit(sender)
+                } else {
+                    join(sender, this@Channel)
+                }
+            }
+            dynamic("message", optional = true) {
+                execute<CommandSender> { sender, _, argument ->
+                    if (sender is Player) {
+                        execute(sender, argument)
                     } else {
-                        join(sender, this@Channel)
+                        execute(sender, argument)
                     }
                 }
-                dynamic("message", optional = true) {
-                    execute<CommandSender> { sender, _, argument ->
-                        if (sender is Player) {
-                            execute(sender, argument)
-                        } else {
-                            execute(sender, argument)
-                        }
-                    }
-                }
-                incorrectSender { sender, _ ->
-                    sender.sendLang("Command-Not-Player")
-                }
+            }
+            incorrectSender { sender, _ ->
+                sender.sendLang("Command-Not-Player")
             }
         }
     }
 
-    open fun unregister() {
-        bindings.command?.forEach { unregisterCommand(it) }
-        listeners.clear()
+    open fun canListen(player: Player): Boolean {
+        return player.passPermission(settings.listenPermission)
     }
 
-    open fun execute(sender: CommandSender, message: String) {
+    open fun canSpeak(player: Player): Boolean {
+        return settings.speakCondition.pass(player)
+    }
+
+    open fun execute(sender: CommandSender, message: String): ChannelExecuteResult {
         if (sender is Player) {
-            execute(sender, message)
-            return
+            return execute(sender, message)
         }
         val component = Components.empty()
-        console?.let { format ->
+        consoleFormat?.let { format ->
             format.prefix.forEach { prefix ->
                 component.append(prefix.value[0].content.toTextComponent(sender)) }
             component.append(format.msg.createComponent(sender, message, settings.disabledFunctions))
             format.suffix.forEach { suffix ->
                 component.append(suffix.value[0].content.toTextComponent(sender)) }
-        } ?: return
+        } ?: return ChannelExecuteResult(failedReason = ChannelExecuteResult.FailReason.NO_FORMAT)
 
         if (settings.proxy && BukkitProxyManager.processor != null) {
             BukkitProxyManager.sendBroadcastRaw(
                 onlinePlayers.firstOrNull(),
                 nilUUID,
                 component,
-                settings.joinPermission,
+                settings.listenPermission,
                 settings.doubleTransfer,
                 settings.ports
             )
-        } else if (!settings.forceProxy) {
+        } else {
             listeners.forEach { getProxyPlayer(it)?.sendComponent(null, component) }
             sender.sendComponent(null, component)
         }
+        return ChannelExecuteResult.success(component)
     }
 
-    open fun execute(player: Player, message: String, toConsole: Boolean = true): Pair<ComponentText, ComponentText?>? {
-        if (!player.checkMute()) {
-            return null
-        }
-        if (!settings.speakCondition.pass(player)) {
-            player.sendLang("Channel-No-Speak-Permission")
-            return null
-        }
-        if (settings.filterBeforeSending && TrChat.api().getFilterManager().filter(message, adaptPlayer(player)).sensitiveWords > 0) {
-            player.sendLang("Channel-Bad-Language")
-            return null
+    open fun execute(player: Player, message: String, toConsole: Boolean = true): ChannelExecuteResult {
+        if (!checkLimits(player, message)) {
+            return ChannelExecuteResult(failedReason = ChannelExecuteResult.FailReason.LIMITED)
         }
         val session = player.session
         session.lastChannel = this
         session.lastPublicMessage = message
         val event = TrChatEvent(this, session, message)
         if (!event.call()) {
-            return null
+            return ChannelExecuteResult(failedReason = ChannelExecuteResult.FailReason.EVENT)
         }
-        val msg = events.process(player, event.message)?.replace("{{", "\\{{") ?: return null
+        val msg = events.process(player, event.message)?.replace("{{", "\\{{")
+            ?: return ChannelExecuteResult(failedReason = ChannelExecuteResult.FailReason.EVENT)
         ChatLogs.logNormal(player.name, msg)
         Metrics.increase(0)
 
@@ -151,17 +148,10 @@ open class Channel(
             format.suffix
                 .mapNotNull { suffix -> suffix.value.firstOrNull { it.condition.pass(player) }?.content?.toTextComponent(player) }
                 .forEach { suffix -> component.append(suffix) }
-        } ?: return null
+        } ?: return ChannelExecuteResult(failedReason = ChannelExecuteResult.FailReason.NO_FORMAT)
         if (session.cancelChat) {
             session.cancelChat = false
-            return null
-        }
-        if (settings.sendToDiscord) {
-            HookPlugin.getDiscordSRV().sendMessage(
-                player,
-                TrChat.api().getFilterManager().filter(component.toLegacyText(), adaptPlayer(player)).filtered,
-                settings.discordChannel.takeIf { it.isNotEmpty() }
-            )
+            return ChannelExecuteResult(failedReason = ChannelExecuteResult.FailReason.EVENT)
         }
         // Proxy
         if (settings.proxy) {
@@ -170,28 +160,28 @@ open class Channel(
                     player,
                     player.uniqueId,
                     component,
-                    settings.joinPermission,
+                    settings.listenPermission,
                     settings.doubleTransfer,
                     settings.ports
                 )
-                return component to null
+                return ChannelExecuteResult.success(component)
             }
         }
         // Local
         when (settings.range.type) {
-            Range.Type.ALL -> {
+            ChannelRange.Type.ALL -> {
                 listeners.filter { events.send(player, it, msg) }.forEach {
                     getProxyPlayer(it)?.sendComponent(player, component)
                 }
             }
-            Range.Type.SINGLE_WORLD -> {
+            ChannelRange.Type.SINGLE_WORLD -> {
                 onlinePlayers.filter { it.name in listeners
                         && it.world == player.world
                         && events.send(player, it.name, msg) }.forEach {
                     it.sendComponent(player, component)
                 }
             }
-            Range.Type.DISTANCE -> {
+            ChannelRange.Type.DISTANCE -> {
                 onlinePlayers.filter { it.name in listeners
                         && it.world == player.world
                         && it.location.distance(player.location) <= settings.range.distance
@@ -199,16 +189,63 @@ open class Channel(
                     it.sendComponent(player, component)
                 }
             }
-            Range.Type.SELF -> {
+            ChannelRange.Type.SELF -> {
                 if (events.send(player, player.name, msg)) {
                     player.sendComponent(player, component)
                 }
             }
         }
-        if (toConsole || settings.isPrivate) {
+        if (toConsole) {
             console().sendComponent(player, component)
         }
-        return component to null
+        return ChannelExecuteResult.success(component)
+    }
+
+    open fun checkLimits(player: Player, message: String): Boolean {
+        if (player.hasPermission("trchat.bypass.*")) {
+            return true
+        }
+        if (!player.checkMute()) {
+            return false
+        }
+        if (!canSpeak(player)) {
+            player.sendLang("Channel-No-Speak-Permission")
+            return false
+        }
+        if (settings.filterBeforeSending && TrChat.api().getFilterManager().filter(message, adaptPlayer(player)).sensitiveWords > 0) {
+            player.sendLang("Channel-Bad-Language")
+            return false
+        }
+        if (!player.hasPermission("trchat.bypass.chatlength")) {
+            if (message.length > Settings.chatLengthLimit) {
+                player.sendLang("General-Too-Long", message.length, Settings.chatLengthLimit)
+                return false
+            }
+        }
+        if (!player.hasPermission("trchat.bypass.repeat")) {
+            val lastMessage = player.session.lastPublicMessage
+            if (Settings.chatSimilarity > 0 && Strings.similarDegree(lastMessage, message) > Settings.chatSimilarity) {
+                player.sendLang("General-Too-Similar")
+                return false
+            }
+        }
+        if (!player.hasPermission("trchat.bypass.chatcd")) {
+            val chatCooldown = player.getCooldownLeft(CooldownType.CHAT)
+            if (chatCooldown > 0) {
+                player.sendLang("Cooldowns-Chat", chatCooldown / 1000)
+                return false
+            }
+        }
+        if (Function.functions.any { !it.checkCooldown(player, message) }) {
+            return false
+        }
+        player.updateCooldown(CooldownType.CHAT, Settings.chatCooldown.get())
+        return true
+    }
+
+    open fun unregister() {
+        bindings.command?.forEach { unregisterCommand(it) }
+        listeners.clear()
     }
 
     companion object {
@@ -240,7 +277,7 @@ open class Channel(
 
         fun quit(player: Player, setDefault: Boolean = false, hint: Boolean = true) {
             player.session.getChannel()?.let {
-                if (!it.settings.autoJoin) {
+                if (!it.settings.alwaysListen) {
                     it.listeners -= player.name
                 }
                 it.events.quit(player)

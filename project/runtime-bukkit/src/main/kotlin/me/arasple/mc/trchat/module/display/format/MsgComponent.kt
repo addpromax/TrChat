@@ -3,6 +3,7 @@ package me.arasple.mc.trchat.module.display.format
 import me.arasple.mc.trchat.module.display.format.obj.Style
 import me.arasple.mc.trchat.module.display.format.obj.Style.Companion.applyTo
 import me.arasple.mc.trchat.module.display.function.Function
+import me.arasple.mc.trchat.module.internal.hook.HookPlugin
 import me.arasple.mc.trchat.module.internal.script.Condition
 import me.arasple.mc.trchat.util.color.CustomColor
 import me.arasple.mc.trchat.util.pass
@@ -21,7 +22,7 @@ class MsgComponent(val defaultColor: List<Pair<CustomColor, Condition?>>, style:
 
     fun createComponent(sender: CommandSender, msg: String, disabledFunctions: List<String>): ComponentText {
         val component = Components.empty()
-        var message = msg
+        var message = HookPlugin.getItemsAdder().replaceFontImages(msg, sender as? Player)
 
         // 非玩家 不处理functions
         if (sender !is Player) {

@@ -17,6 +17,8 @@ interface ClientMessageManager {
 
     fun getExactName(name: String): String?
 
+    fun isPlayerOnline(name: String): Boolean
+
     fun sendMessage(recipient: Any?, data: Array<String>): Future<*>
 
 }

@@ -24,6 +24,9 @@ interface FilterManager {
         notify: ProxyCommandSender? = console()
     )
 
+    /**
+     * 加载云端词库
+     */
     fun loadCloudThesaurus(notify: ProxyCommandSender? = console())
 
     /**

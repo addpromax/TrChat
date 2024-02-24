@@ -2,6 +2,7 @@ package me.arasple.mc.trchat.module.display.function.standard
 
 import com.google.common.cache.Cache
 import com.google.common.cache.CacheBuilder
+import me.arasple.mc.trchat.api.event.TrChatItemShowEvent
 import me.arasple.mc.trchat.api.impl.BukkitProxyManager
 import me.arasple.mc.trchat.module.adventure.toNative
 import me.arasple.mc.trchat.module.conf.file.Functions
@@ -100,7 +101,7 @@ object ItemShow : Function("ITEM") {
 
     override fun parseVariable(sender: Player, arg: String): ComponentText? {
         val item = sender.inventory.getItem(arg.toInt() - 1) ?: ItemStack(Material.AIR)
-        val newItem = if (compatible) {
+        var newItem = if (compatible) {
             buildItem(item) { material = Material.STONE }
         } else {
             var newItem = item.clone()
@@ -109,6 +110,9 @@ object ItemShow : Function("ITEM") {
             }
             newItem
         }
+        val event = TrChatItemShowEvent(sender, newItem, compatible)
+        event.call()
+        newItem = event.item
 
         return cacheComponent.get(newItem) {
             if (ui) {

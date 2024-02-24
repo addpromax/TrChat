@@ -11,11 +11,15 @@ import me.arasple.mc.trchat.module.internal.TrChatBukkit
 import me.arasple.mc.trchat.module.internal.command.main.CommandReply
 import me.arasple.mc.trchat.module.internal.proxy.redis.RedisManager
 import me.arasple.mc.trchat.module.internal.proxy.redis.TrRedisMessage
-import me.arasple.mc.trchat.util.*
+import me.arasple.mc.trchat.util.print
+import me.arasple.mc.trchat.util.proxy.buildMessage
 import me.arasple.mc.trchat.util.proxy.common.MessageReader
+import me.arasple.mc.trchat.util.sendComponent
+import me.arasple.mc.trchat.util.toUUID
 import org.bukkit.Bukkit
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
+import org.bukkit.inventory.Inventory
 import org.bukkit.plugin.messaging.PluginMessageListener
 import org.bukkit.plugin.messaging.PluginMessageRecipient
 import taboolib.common.platform.function.console
@@ -27,6 +31,8 @@ import taboolib.module.chat.Components
 import taboolib.module.lang.asLangText
 import taboolib.module.lang.sendLang
 import taboolib.module.nms.MinecraftVersion
+import taboolib.module.ui.MenuHolder
+import taboolib.module.ui.type.impl.ChestImpl
 import taboolib.platform.util.bukkitPlugin
 import taboolib.platform.util.deserializeToInventory
 import taboolib.platform.util.onlinePlayers
@@ -288,6 +294,15 @@ sealed interface BukkitProxyProcessor : PluginMessageListener {
             if (!Bukkit.getMessenger().isIncomingChannelRegistered(bukkitPlugin, this)) {
                 Bukkit.getMessenger().registerIncomingPluginChannel(bukkitPlugin, this, listener)
             }
+        }
+
+        fun createNoClickChest(rows: Int, title: String): Inventory {
+            return MenuHolder(object : ChestImpl(title) {
+                init {
+                    rows(rows)
+                    onClick(lock = true)
+                }
+            }).inventory
         }
 
     }

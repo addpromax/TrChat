@@ -4,7 +4,6 @@ import me.arasple.mc.trchat.api.impl.BukkitProxyManager
 import me.arasple.mc.trchat.module.display.channel.Channel
 import me.arasple.mc.trchat.module.internal.service.Updater
 import me.arasple.mc.trchat.util.data
-import me.arasple.mc.trchat.util.passPermission
 import me.arasple.mc.trchat.util.session
 import org.bukkit.event.player.PlayerJoinEvent
 import taboolib.common.platform.Platform
@@ -38,8 +37,8 @@ object ListenerJoin {
                 BukkitProxyManager.sendMessage(player, arrayOf("FetchProxyChannels"))
                 hasFetched = true
             }
-            Channel.channels.values.filter { it.settings.autoJoin }.forEach {
-                if (player.passPermission(it.settings.joinPermission)) {
+            Channel.channels.values.filter { it.settings.alwaysListen }.forEach {
+                if (it.canListen(player)) {
                     it.listeners.add(player.name)
                 }
             }

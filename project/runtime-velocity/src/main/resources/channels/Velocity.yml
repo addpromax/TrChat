@@ -3,7 +3,7 @@ Options:
   Proxy: true
   Force-Proxy: true
   Double-Transfer: true
-  Auto-Join: true
+  Always-Listen: true
 
 #Bindings:
 #  Prefix: ['!all']

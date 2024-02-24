@@ -11,7 +11,7 @@ object TrChat {
     private var api: TrChatAPI? = null
 
     fun api(): TrChatAPI {
-        return api ?: error("TrChat failed to load!")
+        return api ?: error("TrChat is loading or failed to load!")
     }
 
     fun register(api: TrChatAPI) {

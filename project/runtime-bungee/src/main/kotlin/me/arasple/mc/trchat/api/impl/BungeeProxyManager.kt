@@ -3,8 +3,8 @@ package me.arasple.mc.trchat.api.impl
 import com.google.common.util.concurrent.ThreadFactoryBuilder
 import me.arasple.mc.trchat.api.ProxyMessageManager
 import me.arasple.mc.trchat.module.internal.TrChatBungee
-import me.arasple.mc.trchat.util.buildMessage
 import me.arasple.mc.trchat.util.print
+import me.arasple.mc.trchat.util.proxy.buildMessage
 import net.md_5.bungee.api.ProxyServer
 import net.md_5.bungee.api.config.ServerInfo
 import taboolib.common.platform.Platform

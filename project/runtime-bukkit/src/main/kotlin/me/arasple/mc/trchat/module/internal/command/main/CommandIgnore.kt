@@ -1,6 +1,7 @@
 package me.arasple.mc.trchat.module.internal.command.main
 
 import me.arasple.mc.trchat.api.impl.BukkitProxyManager
+import me.arasple.mc.trchat.module.conf.file.Settings
 import me.arasple.mc.trchat.module.internal.data.PlayerData
 import me.arasple.mc.trchat.util.data
 import org.bukkit.Bukkit
@@ -25,6 +26,7 @@ object CommandIgnore {
 
     @Awake(LifeCycle.ENABLE)
     fun ignore() {
+        if (Settings.conf.getStringList("Options.Disabled-Commands").contains("ignore")) return
         command("ignore", listOf("trignore"), permission = "trchat.command.ignore") {
             dynamic("player") {
                 suggest {
@@ -68,6 +70,7 @@ object CommandIgnore {
 
     @Awake(LifeCycle.ENABLE)
     fun ignoreList() {
+        if (Settings.conf.getStringList("Options.Disabled-Commands").contains("ignorelist")) return
         command("ignorelist", permission = "trchat.command.ignore") {
             execute<Player> { sender, _, _ ->
                 sender.sendLang(

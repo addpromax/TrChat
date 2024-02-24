@@ -126,6 +126,10 @@ object BukkitProxyManager : ClientMessageManager {
         }
     }
 
+    override fun isPlayerOnline(name: String): Boolean {
+        return getExactName(name) != null
+    }
+
     override fun sendMessage(recipient: Any?, data: Array<String>): Future<*> {
         if (processor == null || recipient !is PluginMessageRecipient) return CompletableFuture.completedFuture(false)
         return processor!!.sendMessage(recipient, executor, data)
@@ -139,12 +143,12 @@ object BukkitProxyManager : ClientMessageManager {
         }
     }
 
-    fun sendBroadcastRaw(recipient: Any?, uuid: UUID, component: ComponentText, joinPerm: String, doubleTransfer: Boolean, ports: List<Int>) {
+    fun sendBroadcastRaw(recipient: Any?, uuid: UUID, component: ComponentText, listenPerm: String, doubleTransfer: Boolean, ports: List<Int>) {
         sendMessage(recipient, arrayOf(
             "BroadcastRaw",
             uuid.parseString(),
             component.toRawMessage(),
-            joinPerm,
+            listenPerm,
             doubleTransfer.toString(),
             ports.joinToString(";"))
         )

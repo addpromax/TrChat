@@ -9,6 +9,7 @@ Options:
   Component-Max-Length: 32700
   Always-Cancel-Chat-Event: false
   Cheat-Client-Secure-Chat: true
+  Disabled-Commands: []
 
 Channel:
   Default: 'Normal'

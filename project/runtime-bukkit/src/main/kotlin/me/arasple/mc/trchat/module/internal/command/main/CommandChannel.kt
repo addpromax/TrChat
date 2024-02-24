@@ -1,5 +1,6 @@
 package me.arasple.mc.trchat.module.internal.command.main
 
+import me.arasple.mc.trchat.module.conf.file.Settings
 import me.arasple.mc.trchat.module.display.channel.Channel
 import org.bukkit.entity.Player
 import taboolib.common.LifeCycle
@@ -18,7 +19,8 @@ import taboolib.module.lang.sendLang
 object CommandChannel {
 
     @Awake(LifeCycle.ENABLE)
-    fun c() {
+    fun register() {
+        if (Settings.conf.getStringList("Options.Disabled-Commands").contains("channel")) return
         command("channel", listOf("chatchannel", "trchannel"), "TrChat Channel", permission = "trchat.command.channel") {
             literal("join") {
                 dynamic("channel") {

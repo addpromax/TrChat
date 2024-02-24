@@ -3,7 +3,7 @@ Options:
   Proxy: true
   Force-Proxy: true
   Double-Transfer: true
-  Auto-Join: true
+  Always-Listen: true
 
 Bindings:
   Prefix: ['!all']
@@ -32,4 +32,4 @@ Console:
       server:
         text: '&eServer&8: '
     msg:
-      default-color: 'l'
+      default-color: 'f'

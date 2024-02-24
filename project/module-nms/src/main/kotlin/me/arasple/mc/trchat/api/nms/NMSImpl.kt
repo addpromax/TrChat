@@ -77,6 +77,15 @@ class NMSImpl : NMS() {
         }
     }
 
+    override fun hoverItem(component: ComponentText, itemStack: ItemStack): ComponentText {
+        val nmsItem = CraftItemStack19.asNMSCopy(itemStack)
+        val nbtTag = NBTTagCompound19()
+        nmsItem.save(nbtTag)
+        val id = nbtTag.getString("id") ?: "minecraft:air"
+        val nbt = nbtTag.get("tag")?.toString() ?: "{}"
+        return component.hoverItem(id, nbt)
+    }
+
     override fun optimizeNBT(itemStack: ItemStack, nbtWhitelist: Array<String>): ItemStack {
         if (itemStack.isAir()) return itemStack
         try {
@@ -115,10 +124,7 @@ class NMSImpl : NMS() {
     override fun addCustomChatCompletions(player: Player, entries: List<String>) {
         if (majorLegacy < 11901) return
         try {
-            player.sendPacket(ClientboundCustomChatCompletionsPacket::class.java.invokeConstructor(
-                ClientboundCustomChatCompletionsPacket.Action.ADD,
-                entries
-            ))
+            player.addCustomChatCompletions(entries)
         } catch (_: NoClassDefFoundError) {
         }
     }
@@ -126,10 +132,7 @@ class NMSImpl : NMS() {
     override fun removeCustomChatCompletions(player: Player, entries: List<String>) {
         if (majorLegacy < 11901) return
         try {
-            player.sendPacket(ClientboundCustomChatCompletionsPacket::class.java.invokeConstructor(
-                ClientboundCustomChatCompletionsPacket.Action.REMOVE,
-                entries
-            ))
+            player.removeCustomChatCompletions(entries)
         } catch (_: NoClassDefFoundError) {
         }
     }

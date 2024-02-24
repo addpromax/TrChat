@@ -3,7 +3,6 @@ package me.arasple.mc.trchat.util
 import com.eatthepath.uuid.FastUUID
 import com.google.gson.JsonElement
 import com.google.gson.JsonParser
-import me.arasple.mc.trchat.util.proxy.common.MessageBuilder
 import taboolib.common.platform.function.console
 import java.util.*
 
@@ -38,10 +37,6 @@ fun Throwable.reportOnce(title: String, printStackTrace: Boolean = true) {
 }
 
 fun String.parseJson(): JsonElement = jsonParser.parse(this)!!
-
-fun buildMessage(vararg messages: String): List<ByteArray> {
-    return MessageBuilder.create(arrayOf(UUID.randomUUID().parseString(), *messages))
-}
 
 fun String.toUUID(): UUID = FastUUID.parseUUID(this)
 

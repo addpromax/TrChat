@@ -1,5 +1,6 @@
 package me.arasple.mc.trchat.module.internal.command.main
 
+import me.arasple.mc.trchat.module.conf.file.Settings
 import me.arasple.mc.trchat.module.display.function.standard.EnderChestShow
 import me.arasple.mc.trchat.module.display.function.standard.ImageShow
 import me.arasple.mc.trchat.module.display.function.standard.InventoryShow
@@ -24,7 +25,8 @@ import taboolib.platform.util.sendLang
 object CommandViews {
 
     @Awake(LifeCycle.ENABLE)
-    fun c() {
+    fun register() {
+        if (Settings.conf.getStringList("Options.Disabled-Commands").contains("view")) return
         command("view-item", permissionDefault = PermissionDefault.TRUE) {
             dynamic("item") {
                 execute<Player> { sender, _, argument ->

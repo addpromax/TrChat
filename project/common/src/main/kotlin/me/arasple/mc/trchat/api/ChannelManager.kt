@@ -8,8 +8,19 @@ import taboolib.common.platform.ProxyCommandSender
  */
 interface ChannelManager {
 
+    /**
+     * 加载所有聊天频道
+     *
+     * @param sender lang消息接收者
+     */
     fun loadChannels(sender: ProxyCommandSender)
 
+    /**
+     * 获取聊天频道
+     *
+     * Bukkit -> Channel
+     * BungeeCord/Velocity -> String
+     */
     fun getChannel(id: String): Any?
 
 }

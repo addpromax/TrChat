@@ -6,8 +6,8 @@ import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier
 import com.velocitypowered.api.proxy.server.RegisteredServer
 import me.arasple.mc.trchat.api.ProxyMessageManager
 import me.arasple.mc.trchat.module.internal.TrChatVelocity.plugin
-import me.arasple.mc.trchat.util.buildMessage
 import me.arasple.mc.trchat.util.print
+import me.arasple.mc.trchat.util.proxy.buildMessage
 import taboolib.common.platform.Platform
 import taboolib.common.platform.PlatformFactory
 import taboolib.common.platform.PlatformSide

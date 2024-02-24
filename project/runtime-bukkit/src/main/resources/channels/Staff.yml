@@ -1,8 +1,7 @@
 Options:
   Join-Permission: 'trchat.admin'
   Proxy: true
-  Double-Transfer: true
-  Auto-Join: true
+  Always-Listen: true
 
 Bindings:
   Command: ['staff']

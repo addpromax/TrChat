@@ -7,8 +7,8 @@ import me.arasple.mc.trchat.module.display.channel.Channel
 import me.arasple.mc.trchat.module.display.channel.PrivateChannel
 import me.arasple.mc.trchat.module.display.channel.obj.ChannelBindings
 import me.arasple.mc.trchat.module.display.channel.obj.ChannelEvents
+import me.arasple.mc.trchat.module.display.channel.obj.ChannelRange
 import me.arasple.mc.trchat.module.display.channel.obj.ChannelSettings
-import me.arasple.mc.trchat.module.display.channel.obj.Range
 import me.arasple.mc.trchat.module.display.format.Format
 import me.arasple.mc.trchat.module.display.format.Group
 import me.arasple.mc.trchat.module.display.format.JsonComponent
@@ -105,12 +105,13 @@ object Loader {
 
         val settings = conf.getConfigurationSection("Options")!!.let { section ->
             val joinPermission = section.getString("Join-Permission", "")!!
+            val listenPermission = section.getString("Listen-Permission", joinPermission)!!
             val speakCondition = section.getString("Speak-Condition").toCondition()
-            val autoJoin = section.getBoolean("Auto-Join", true)
+            val alwaysListen = section.getBoolean("Always-Listen", section.getBoolean("Auto-Join", true))
             val isPrivate = section.getBoolean("Private", false)
             val range = section.getString("Target", "ALL")!!.uppercase().split(";").let {
                 val distance = it.getOrNull(1)?.toInt() ?: -1
-                Range(Range.Type.valueOf(it[0]), distance)
+                ChannelRange(ChannelRange.Type.valueOf(it[0]), distance)
             }
             val proxy = section.getBoolean("Proxy", false)
             val forceProxy = section.getBoolean("Force-Proxy", false)
@@ -122,7 +123,7 @@ object Loader {
             val receiveFromDiscord = section.getBoolean("Receive-From-Discord", true)
             val discordChannel = section.getString("Discord-Channel", "")!!
             ChannelSettings(
-                joinPermission, speakCondition, autoJoin, isPrivate,
+                joinPermission, listenPermission, speakCondition, alwaysListen, isPrivate,
                 range, proxy, forceProxy, doubleTransfer, ports, disabledFunctions, filterBeforeSending,
                 sendToDiscord, receiveFromDiscord, discordChannel
             )
@@ -159,8 +160,14 @@ object Loader {
                 val suffix = parseGroups(map["suffix"] as? LinkedHashMap<*, *>)
                 Format(condition, priority, prefix, msg, suffix)
             }.sortedBy { it.priority }
+            val console = conf.getMapList("Console").firstOrNull()?.let { map ->
+                val prefix = parseGroups(map["prefix"] as LinkedHashMap<*, *>)
+                val msg = parseMsg(map["msg"] as LinkedHashMap<*, *>)
+                val suffix = parseGroups(map["suffix"] as? LinkedHashMap<*, *>)
+                Format(null, 100, prefix, msg, suffix)
+            }
 
-            return PrivateChannel(id, settings, bindings, events, sender, receiver)
+            return PrivateChannel(id, settings, bindings, events, sender, receiver, console).also { it.init() }
         } else {
             val formats = conf.getMapList("Formats").map { map ->
                 val condition = map["condition"]?.toString()?.toCondition()
@@ -176,7 +183,7 @@ object Loader {
                 val suffix = parseGroups(map["suffix"] as? LinkedHashMap<*, *>)
                 Format(null, 100, prefix, msg, suffix)
             }
-            return Channel(id, settings, bindings, events, formats, console)
+            return Channel(id, settings, bindings, events, formats, console).also { it.init() }
         }
     }
 

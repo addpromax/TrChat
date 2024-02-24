@@ -20,7 +20,15 @@ fun String.parseSimple() = component().build {
 fun ComponentText.hoverItemFixed(item: ItemStack): ComponentText {
     var newItem = item.optimizeShulkerBox()
     newItem = NMS.instance.optimizeNBT(newItem)
-    return hoverItem(newItem)
+    return try {
+        hoverItem(newItem)
+    } catch (_: Throwable) {
+        try {
+            NMS.instance.hoverItem(this, newItem)
+        } catch (_: Throwable) {
+            hoverText("Unable to display this item! Click to view it.")
+        }
+    }
 }
 
 @Suppress("Deprecation")

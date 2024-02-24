@@ -22,3 +22,11 @@ Receiver:
     msg:
       default-color: 'f'
       hover: '&7日期: %server_time_HH:mm:ss%'
+
+# Can't use placeholders!
+Console:
+  - prefix:
+      server:
+        text: '&8[&6CONSOLE &7➥ &2you&8] '
+    msg:
+      default-color: 'f'

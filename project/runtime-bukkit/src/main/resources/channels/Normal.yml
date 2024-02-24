@@ -1,6 +1,6 @@
 Options:
   Target: ALL
-  Auto-Join: true
+  Always-Listen: true
 
 Formats:
   - condition: ~

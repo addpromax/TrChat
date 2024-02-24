@@ -21,6 +21,15 @@ body:
         - label: '我已查阅 Wiki 对于该问题的相关内容, 并确定该问题是存在的.'
           required: true
 
+  - type: checkboxes
+    id: proxy
+    attributes:
+      label: '如果使用跨服功能, 是否在代理端上安装了TrChat或使用redis转发?'
+      description: '如果没有, 你将不能正常使用跨服功能'
+      options:
+        - label: '我已在代理端上安装了TrChat或使用redis转发'
+          required: true
+
   - type: textarea
     id: description
     attributes:

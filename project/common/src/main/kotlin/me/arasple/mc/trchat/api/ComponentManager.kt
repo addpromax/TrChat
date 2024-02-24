@@ -26,6 +26,11 @@ interface ComponentManager {
      */
     fun filterComponent(component: ComponentText, maxLength: Int = -1): ComponentText
 
+    /**
+     * 合法化Component
+     *
+     * @param maxLength 最大长度 (负数为不验证)
+     */
     fun validateComponent(component: ComponentText, maxLength: Int = -1): ComponentText
 
 }

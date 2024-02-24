@@ -1,6 +1,7 @@
 package me.arasple.mc.trchat.module.internal.command.main
 
 import me.arasple.mc.trchat.api.impl.BukkitProxyManager
+import me.arasple.mc.trchat.module.conf.file.Settings
 import me.arasple.mc.trchat.module.internal.TrChatBukkit
 import me.arasple.mc.trchat.util.data
 import org.bukkit.Bukkit
@@ -32,7 +33,8 @@ object CommandMute {
     val muteDateFormat = SimpleDateFormat()
 
     @Awake(LifeCycle.ENABLE)
-    fun c() {
+    fun mute() {
+        if (Settings.conf.getStringList("Options.Disabled-Commands").contains("mute")) return
         command("mute", listOf("trmute"), description = "Mute a player", permission = "trchat.command.mute") {
             dynamic("player") {
                 suggest {
@@ -90,6 +92,11 @@ object CommandMute {
                 }
             }
         }
+    }
+
+    @Awake(LifeCycle.ENABLE)
+    fun muteall() {
+        if (Settings.conf.getStringList("Options.Disabled-Commands").contains("muteall")) return
         command("muteall", listOf("globalmute"), "Mute all players", permission = "trchat.command.muteall") {
             execute<CommandSender> { sender, _, _ ->
                 TrChatBukkit.isGlobalMuting = !TrChatBukkit.isGlobalMuting

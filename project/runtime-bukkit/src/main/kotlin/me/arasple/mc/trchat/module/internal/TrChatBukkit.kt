@@ -16,7 +16,9 @@ import taboolib.common.platform.*
 import taboolib.common.platform.function.console
 import taboolib.common.platform.function.pluginVersion
 import taboolib.module.lang.sendLang
+import taboolib.module.nms.ChannelExecutor
 import taboolib.module.nms.MinecraftVersion.majorLegacy
+import taboolib.platform.Folia
 
 @PlatformSide(Platform.BUKKIT)
 object TrChatBukkit : Plugin() {
@@ -43,6 +45,9 @@ object TrChatBukkit : Plugin() {
     }
 
     override fun onEnable() {
+        if (Folia.isFolia) {
+            ChannelExecutor.disable()
+        }
         BukkitProxyManager.processor
         HookPlugin.printInfo()
         reload(console())

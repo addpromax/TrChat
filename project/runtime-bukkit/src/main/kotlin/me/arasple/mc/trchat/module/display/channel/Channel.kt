@@ -8,7 +8,6 @@ import me.arasple.mc.trchat.module.display.channel.obj.*
 import me.arasple.mc.trchat.module.display.format.Format
 import me.arasple.mc.trchat.module.display.function.Function
 import me.arasple.mc.trchat.module.internal.data.ChatLogs
-import me.arasple.mc.trchat.module.internal.script.Condition
 import me.arasple.mc.trchat.module.internal.service.Metrics
 import me.arasple.mc.trchat.util.*
 import org.bukkit.command.CommandSender
@@ -61,8 +60,8 @@ open class Channel(
             name = bindings.command[0],
             aliases = subList(bindings.command, 1),
             description = "TrChat channel $id",
-            permission = settings.joinPermission,
-            permissionDefault = if (settings.speakCondition != Condition.EMPTY) PermissionDefault.TRUE else PermissionDefault.OP
+            permission = "trchat.command.channel.${id.lowercase()}",
+            permissionDefault = PermissionDefault.TRUE
         ) {
             execute<Player> { sender, _, _ ->
                 if (sender.session.channel == this@Channel.id) {
@@ -91,7 +90,11 @@ open class Channel(
     }
 
     open fun canSpeak(player: Player): Boolean {
-        return settings.speakCondition.pass(player)
+        return if (settings.speakCondition.isEmpty()) {
+            player.passPermission(settings.joinPermission)
+        } else {
+            settings.speakCondition.pass(player)
+        }
     }
 
     open fun execute(sender: CommandSender, message: String): ChannelExecuteResult {

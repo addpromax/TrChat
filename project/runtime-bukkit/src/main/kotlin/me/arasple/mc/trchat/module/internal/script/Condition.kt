@@ -17,6 +17,10 @@ value class Condition(private val script: String) {
         else eval(player, script)
     }
 
+    fun isEmpty(): Boolean {
+        return script.isEmpty()
+    }
+
     companion object {
 
         val EMPTY = Condition("")

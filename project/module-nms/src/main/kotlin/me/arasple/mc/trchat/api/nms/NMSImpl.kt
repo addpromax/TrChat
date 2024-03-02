@@ -6,11 +6,16 @@ import net.minecraft.server.v1_12_R1.ChatMessageType
 import net.minecraft.server.v1_12_R1.PacketPlayOutChat
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import taboolib.common.platform.function.adaptPlayer
 import taboolib.library.reflex.Reflex.Companion.invokeConstructor
 import taboolib.module.chat.ComponentText
+import taboolib.module.nms.LocaleKey
 import taboolib.module.nms.MinecraftVersion.isUniversal
 import taboolib.module.nms.MinecraftVersion.majorLegacy
+import taboolib.module.nms.NMSItem
+import taboolib.module.nms.nmsProxy
 import taboolib.module.nms.sendPacket
+import taboolib.platform.Folia
 import taboolib.platform.util.isAir
 import java.util.*
 
@@ -55,6 +60,10 @@ class NMSImpl : NMS() {
     }
 
     override fun sendMessage(receiver: Player, component: ComponentText, sender: UUID?) {
+        if (Folia.isFolia) {
+            component.sendTo(adaptPlayer(receiver))
+            return
+        }
         if (majorLegacy >= 11900) {
             val player = (receiver as CraftPlayer19).handle
             player.sendSystemMessage(craftChatMessageFromComponent(component) as NMSIChatBaseComponent)
@@ -146,5 +155,11 @@ class NMSImpl : NMS() {
             ))
         } catch (_: NoClassDefFoundError) {
         }
+    }
+
+    override fun getLocaleKey(itemStack: ItemStack): LocaleKey {
+        val nmsItemStack = nmsProxy<NMSItem>().getNMSCopy(itemStack) as net.minecraft.server.v1_16_R3.ItemStack
+        val nmsItem = nmsItemStack.item
+        return LocaleKey("N", nmsItem.f(nmsItemStack))
     }
 }

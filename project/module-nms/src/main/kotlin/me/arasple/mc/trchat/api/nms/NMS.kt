@@ -3,6 +3,7 @@ package me.arasple.mc.trchat.api.nms
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import taboolib.module.chat.ComponentText
+import taboolib.module.nms.LocaleKey
 import taboolib.module.nms.nmsProxy
 import java.util.*
 
@@ -29,6 +30,8 @@ abstract class NMS {
     abstract fun removeCustomChatCompletions(player: Player, entries: List<String>)
 
     abstract fun setCustomChatCompletions(player: Player, entries: List<String>)
+
+    abstract fun getLocaleKey(itemStack: ItemStack): LocaleKey
 
     companion object {
 

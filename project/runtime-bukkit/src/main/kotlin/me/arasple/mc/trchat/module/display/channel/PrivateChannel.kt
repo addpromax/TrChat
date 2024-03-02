@@ -10,7 +10,6 @@ import me.arasple.mc.trchat.module.display.format.Format
 import me.arasple.mc.trchat.module.internal.command.main.CommandReply
 import me.arasple.mc.trchat.module.internal.data.ChatLogs
 import me.arasple.mc.trchat.module.internal.data.PlayerData
-import me.arasple.mc.trchat.module.internal.script.Condition
 import me.arasple.mc.trchat.module.internal.service.Metrics
 import me.arasple.mc.trchat.util.pass
 import me.arasple.mc.trchat.util.sendComponent
@@ -59,8 +58,8 @@ class PrivateChannel(
             name = bindings.command[0],
             aliases = subList(bindings.command, 1),
             description = "TrChat channel $id",
-            permission = settings.joinPermission,
-            permissionDefault = if (settings.speakCondition != Condition.EMPTY) PermissionDefault.TRUE else PermissionDefault.OP
+            permission = "trchat.command.channel.${id.lowercase()}",
+            permissionDefault = PermissionDefault.TRUE
         ) {
             execute<Player> { sender, _, _ ->
                 if (sender.session.channel == this@PrivateChannel.id) {

@@ -4,6 +4,7 @@ import com.google.common.cache.Cache
 import com.google.common.cache.CacheBuilder
 import me.arasple.mc.trchat.api.event.TrChatItemShowEvent
 import me.arasple.mc.trchat.api.impl.BukkitProxyManager
+import me.arasple.mc.trchat.api.nms.NMS
 import me.arasple.mc.trchat.module.adventure.toNative
 import me.arasple.mc.trchat.module.conf.file.Functions
 import me.arasple.mc.trchat.module.display.function.Function
@@ -102,7 +103,7 @@ object ItemShow : Function("ITEM") {
     override fun parseVariable(sender: Player, arg: String): ComponentText? {
         val item = sender.inventory.getItem(arg.toInt() - 1) ?: ItemStack(Material.AIR)
         var newItem = if (compatible) {
-            buildItem(item) { material = Material.STONE }
+            if (item.isAir()) ItemStack(Material.STONE) else buildItem(item) { material = Material.STONE }
         } else {
             var newItem = item.clone()
             HookPlugin.registry.filterIsInstance<HookDisplayItem>().forEach { element ->
@@ -208,7 +209,12 @@ object ItemShow : Function("ITEM") {
                     Components.text(getI18nName(player))
                 }
             } catch (_: UnsupportedVersionException) {
-                Components.text(nmsProxy<NMSItem>().getKey(this))
+                try {
+                    // 玄学问题 https://github.com/TrPlugins/TrChat/issues/344
+                    Components.translation(NMS.instance.getLocaleKey(this).path)
+                } catch (_: Throwable) {
+                    Components.text(nmsProxy<NMSItem>().getKey(this))
+                }
             }
         } else {
             try {

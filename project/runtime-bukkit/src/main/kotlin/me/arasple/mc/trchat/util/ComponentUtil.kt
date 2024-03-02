@@ -24,6 +24,7 @@ fun ComponentText.hoverItemFixed(item: ItemStack): ComponentText {
         hoverItem(newItem)
     } catch (_: Throwable) {
         try {
+            // try another method https://github.com/TrPlugins/TrChat/issues/363
             NMS.instance.hoverItem(this, newItem)
         } catch (_: Throwable) {
             hoverText("Unable to display this item! Click to view it.")

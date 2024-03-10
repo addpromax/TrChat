@@ -16,10 +16,10 @@ subprojects {
         env {
             install(UNIVERSAL, DATABASE, KETHER, METRICS, NMS_UTIL, UI)
             install(EXPANSION_REDIS, EXPANSION_JAVASCRIPT, EXPANSION_PLAYER_DATABASE)
-            install(BUKKIT_ALL, BUNGEE, VELOCITY, "platform-bukkit-impl")
+            install(BUKKIT_ALL, BUNGEE, VELOCITY)
         }
         version {
-            taboolib = "6.1.1-beta4"
+            taboolib = "6.1.1-beta7"
             coroutines = null
         }
     }

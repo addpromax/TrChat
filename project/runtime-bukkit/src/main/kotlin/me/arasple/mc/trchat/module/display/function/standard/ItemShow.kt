@@ -38,6 +38,7 @@ import taboolib.module.nms.*
 import taboolib.module.ui.buildMenu
 import taboolib.module.ui.type.Chest
 import taboolib.module.ui.type.PageableChest
+import taboolib.platform.Folia
 import taboolib.platform.util.*
 
 /**
@@ -85,19 +86,18 @@ object ItemShow : Function("ITEM") {
     private val AIR_ITEM = buildItem(XMaterial.GRAY_STAINED_GLASS_PANE) { name = "§f" }
 
     override fun createVariable(sender: Player, message: String): String {
-        return if (!enabled) {
-            message
-        } else {
-            var result = message
-            keys.forEach { key ->
-                (1..9).forEach {
-                    result = result.replace("$key-$it", "{{ITEM:$it}}", ignoreCase = true)
-                    result = result.replace("$key$it", "{{ITEM:$it}}", ignoreCase = true)
-                }
-                result = result.replace(key, "{{ITEM:${sender.inventory.heldItemSlot + 1}}}", ignoreCase = true)
-            }
-            result
+        if (!enabled) {
+            return message
         }
+        var result = message
+        keys.forEach { key ->
+            (1..9).forEach {
+                result = result.replace("$key-$it", "{{ITEM:$it}}", ignoreCase = true)
+                result = result.replace("$key$it", "{{ITEM:$it}}", ignoreCase = true)
+            }
+            result = result.replace(key, "{{ITEM:${sender.inventory.heldItemSlot + 1}}}", ignoreCase = true)
+        }
+        return result
     }
 
     override fun parseVariable(sender: Player, arg: String): ComponentText? {
@@ -201,6 +201,9 @@ object ItemShow : Function("ITEM") {
 
     @Suppress("Deprecation")
     private fun ItemStack.getNameComponent(player: Player): ComponentText {
+        if (Folia.isFolia) {
+            return Components.text("Item")
+        }
         return if (originName || itemMeta?.hasDisplayName() != true) {
             try {
                 if (MinecraftVersion.isHigherOrEqual(MinecraftVersion.V1_15)) {
@@ -213,7 +216,11 @@ object ItemShow : Function("ITEM") {
                     // 玄学问题 https://github.com/TrPlugins/TrChat/issues/344
                     Components.translation(NMS.instance.getLocaleKey(this).path)
                 } catch (_: Throwable) {
-                    Components.text(nmsProxy<NMSItem>().getKey(this))
+                    try {
+                        Components.text(nmsProxy<NMSItem>().getKey(this))
+                    } catch (_: Throwable) {
+                        Components.text("Item")
+                    }
                 }
             }
         } else {

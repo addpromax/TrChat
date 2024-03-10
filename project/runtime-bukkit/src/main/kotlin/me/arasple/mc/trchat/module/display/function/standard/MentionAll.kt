@@ -50,15 +50,14 @@ object MentionAll : Function("MENTIONALL") {
     var keys = emptyList<String>()
 
     override fun createVariable(sender: Player, message: String): String {
-        return if (!enabled) {
-            message
-        } else {
-            var result = message
-            keys.forEach {
-                result = result.replace(it, "{{MENTIONALL:${sender.name}}}")
-            }
-            result
+        if (!enabled) {
+            return message
         }
+        var result = message
+        keys.forEach {
+            result = result.replace(it, "{{MENTIONALL:${sender.name}}}")
+        }
+        return result
     }
 
     override fun parseVariable(sender: Player, arg: String): ComponentText? {

@@ -50,16 +50,15 @@ object Mention : Function("MENTION") {
     val cooldown = ConfigNodeTransfer<String, Long> { parseMillis() }
 
     override fun createVariable(sender: Player, message: String): String {
-        return if (!enabled) {
-            message
-        } else {
-            val regex = getRegex(sender) ?: return message
-            val result = regex.replace(message, "{{MENTION:\$1}}")
-            if (result != message && !sender.hasPermission("trchat.bypass.mentioncd")) {
-                sender.updateCooldown(CooldownType.MENTION, cooldown.get())
-            }
-            result
+        if (!enabled) {
+            return message
         }
+        val regex = getRegex(sender) ?: return message
+        val result = regex.replace(message, "{{MENTION:\$1}}")
+        if (result != message && !sender.hasPermission("trchat.bypass.mentioncd")) {
+            sender.updateCooldown(CooldownType.MENTION, cooldown.get())
+        }
+        return result
     }
 
     override fun parseVariable(sender: Player, arg: String): ComponentText? {

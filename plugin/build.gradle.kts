@@ -19,6 +19,7 @@ taboolib {
         }
     }
     relocate("com.eatthepath.uuid.", "${rootProject.group}.library.uuid.")
+    relocate("com.electronwill.nightconfig", "com.electronwill.nightconfig_3_6_7")
 }
 
 dependencies {

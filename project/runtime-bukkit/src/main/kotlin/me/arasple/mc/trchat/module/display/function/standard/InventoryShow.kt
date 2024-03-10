@@ -65,15 +65,14 @@ object InventoryShow : Function("INVENTORY") {
     private val PLACEHOLDER_ITEM = buildItem(XMaterial.WHITE_STAINED_GLASS_PANE) { name = "§f" }
 
     override fun createVariable(sender: Player, message: String): String {
-        return if (!enabled) {
-            message
-        } else {
-            var result = message
-            keys.forEach {
-                result = result.replaceFirst(it, "{{INVENTORY:${sender.name}}}", ignoreCase = true)
-            }
-            result
+        if (!enabled) {
+            return message
         }
+        var result = message
+        keys.forEach {
+            result = result.replaceFirst(it, "{{INVENTORY:${sender.name}}}", ignoreCase = true)
+        }
+        return result
     }
 
     override fun parseVariable(sender: Player, arg: String): ComponentText? {

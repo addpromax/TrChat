@@ -57,14 +57,13 @@ object ImageShow : Function("IMAGE") {
     val tasks = mutableMapOf<String, CompletableFuture<NMSMap>>()
 
     override fun createVariable(sender: Player, message: String): String {
-        return if (!enabled) {
-            message
-        } else {
-            val result = key.get().find(message) ?: return message
-            val description = result.groupValues[1]
-            val url = result.groupValues[2]
-            message.replaceFirst(key.get(), "{{IMAGE:$description;${url.encodeBase64()}}}")
+        if (!enabled) {
+            return message
         }
+        val result = key.get().find(message) ?: return message
+        val description = result.groupValues[1]
+        val url = result.groupValues[2]
+        return message.replaceFirst(key.get(), "{{IMAGE:$description;${url.encodeBase64()}}}")
     }
 
     override fun parseVariable(sender: Player, arg: String): ComponentText? {

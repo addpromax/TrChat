@@ -11,6 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta
 import taboolib.module.chat.ComponentText
 import taboolib.module.chat.component
 import taboolib.module.nms.getI18nName
+import taboolib.platform.Folia
 import taboolib.platform.util.*
 
 fun String.parseSimple() = component().build {
@@ -18,14 +19,17 @@ fun String.parseSimple() = component().build {
 }
 
 fun ComponentText.hoverItemFixed(item: ItemStack): ComponentText {
+    if (Folia.isFolia) {
+        return hoverText("Folia is unsupported! Click to view it.")
+    }
     var newItem = item.optimizeShulkerBox()
     newItem = NMS.instance.optimizeNBT(newItem)
     return try {
-        hoverItem(newItem)
+        // https://github.com/TrPlugins/TrChat/issues/363
+        NMS.instance.hoverItem(this, newItem)
     } catch (_: Throwable) {
         try {
-            // try another method https://github.com/TrPlugins/TrChat/issues/363
-            NMS.instance.hoverItem(this, newItem)
+            hoverItem(newItem)
         } catch (_: Throwable) {
             hoverText("Unable to display this item! Click to view it.")
         }

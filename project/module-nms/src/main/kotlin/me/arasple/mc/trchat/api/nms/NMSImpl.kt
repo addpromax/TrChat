@@ -1,5 +1,6 @@
 package me.arasple.mc.trchat.api.nms
 
+import me.arasple.mc.trchat.util.ServerUtil
 import me.arasple.mc.trchat.util.reportOnce
 import net.minecraft.network.protocol.game.ClientboundCustomChatCompletionsPacket
 import net.minecraft.server.v1_12_R1.ChatMessageType
@@ -60,7 +61,7 @@ class NMSImpl : NMS() {
     }
 
     override fun sendMessage(receiver: Player, component: ComponentText, sender: UUID?) {
-        if (Folia.isFolia) {
+        if (Folia.isFolia || ServerUtil.isModdedServer) {
             component.sendTo(adaptPlayer(receiver))
             return
         }

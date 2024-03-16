@@ -33,7 +33,7 @@ public final class HexUtils {
                     "\\{#([A-Fa-f0-9]){6}}|" +
                     "&#([A-Fa-f0-9]){6}|" +
                     "#([A-Fa-f0-9]){6}|" +
-                    org.bukkit.ChatColor.COLOR_CHAR
+                    '§'
     );
 
     private HexUtils() {

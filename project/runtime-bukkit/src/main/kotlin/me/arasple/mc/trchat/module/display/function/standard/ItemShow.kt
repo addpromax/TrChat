@@ -6,6 +6,7 @@ import me.arasple.mc.trchat.api.event.TrChatItemShowEvent
 import me.arasple.mc.trchat.api.impl.BukkitProxyManager
 import me.arasple.mc.trchat.api.nms.NMS
 import me.arasple.mc.trchat.module.adventure.toNative
+import me.arasple.mc.trchat.module.adventure.toTranslatableComponentAdventure
 import me.arasple.mc.trchat.module.conf.file.Functions
 import me.arasple.mc.trchat.module.display.function.Function
 import me.arasple.mc.trchat.module.display.function.StandardFunction
@@ -212,7 +213,7 @@ object ItemShow : Function("ITEM") {
                 }
             }
         } else if (Folia.isFolia) {
-            Components.text(type.name)
+            toTranslatableComponentAdventure()
         } else {
             try {
                 if (MinecraftVersion.isHigherOrEqual(MinecraftVersion.V1_15)) {

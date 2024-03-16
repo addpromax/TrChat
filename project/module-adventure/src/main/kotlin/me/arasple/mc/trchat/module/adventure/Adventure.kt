@@ -30,6 +30,10 @@ fun Component.toNative() = Components.parseRaw(gson(this))
 
 fun ComponentText.toAdventure() = gson(toRawMessage())
 
+fun ItemStack.toTranslatableComponentAdventure(): ComponentText {
+    return Component.translatable(this).toNative()
+}
+
 fun ComponentText.hoverItemAdventure(item: ItemStack): ComponentText {
     return toAdventure().hoverEvent(item).toNative()
 }

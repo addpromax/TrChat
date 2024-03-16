@@ -50,19 +50,19 @@ object MessageColors {
         string = if (sender.hasPermission(COLOR_PERMISSION_NODE + "rainbow")) {
             string.parseRainbow()
         } else {
-            string.replace(Hex.RAINBOW_PATTERN.toRegex(), "")
+            string.replace(HexUtils.RAINBOW_PATTERN.toRegex(), "")
         }
 
         string = if (sender.hasPermission(COLOR_PERMISSION_NODE + "gradients")) {
             string.parseGradients()
         } else {
-            string.replace(Hex.GRADIENT_PATTERN.toRegex(), "")
+            string.replace(HexUtils.GRADIENT_PATTERN.toRegex(), "")
         }
 
         if (sender.hasPermission(COLOR_PERMISSION_NODE + "hex")) {
             string = string.parseHex()
         } else {
-            Hex.HEX_PATTERNS.forEach { string = string.replace(it.toRegex(), "") }
+            HexUtils.HEX_PATTERNS.forEach { string = string.replace(it.toRegex(), "") }
         }
 
         getColors(sender).forEach { color ->

@@ -32,7 +32,7 @@ class CustomColor(val type: ColorType, val color: String) {
 
         fun get(string: String): CustomColor {
             return caches.computeIfAbsent(string) {
-                val type = if (Hex.GRADIENT_PATTERN.matcher(it).find() || Hex.RAINBOW_PATTERN.matcher(it).find()) {
+                val type = if (HexUtils.GRADIENT_PATTERN.matcher(it).find() || HexUtils.RAINBOW_PATTERN.matcher(it).find()) {
                     ColorType.SPECIAL
                 } else {
                     ColorType.NORMAL

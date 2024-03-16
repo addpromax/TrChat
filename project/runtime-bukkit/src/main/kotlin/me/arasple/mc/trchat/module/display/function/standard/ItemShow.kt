@@ -201,10 +201,19 @@ object ItemShow : Function("ITEM") {
 
     @Suppress("Deprecation")
     private fun ItemStack.getNameComponent(player: Player): ComponentText {
-        if (Folia.isFolia) {
-            return Components.text("Item")
-        }
-        return if (originName || itemMeta?.hasDisplayName() != true) {
+        return if (!originName && itemMeta?.hasDisplayName() == true) {
+            try {
+                Components.empty().append(itemMeta!!.displayName()!!.toNative())
+            } catch (_: Throwable) {
+                try {
+                    Components.empty().append(DefaultComponent(itemMeta!!.displayNameComponent.toList()))
+                } catch (_: Throwable) {
+                    Components.text(itemMeta!!.displayName)
+                }
+            }
+        } else if (Folia.isFolia) {
+            Components.text(type.name)
+        } else {
             try {
                 if (MinecraftVersion.isHigherOrEqual(MinecraftVersion.V1_15)) {
                     Components.translation(getLocaleKey().path)
@@ -219,18 +228,8 @@ object ItemShow : Function("ITEM") {
                     try {
                         Components.text(nmsProxy<NMSItem>().getKey(this))
                     } catch (_: Throwable) {
-                        Components.text("Item")
+                        Components.text(type.name)
                     }
-                }
-            }
-        } else {
-            try {
-                Components.empty().append(itemMeta!!.displayName()!!.toNative())
-            } catch (_: Throwable) {
-                try {
-                    Components.empty().append(DefaultComponent(itemMeta!!.displayNameComponent.toList()))
-                } catch (_: Throwable) {
-                    Components.text(itemMeta!!.displayName)
                 }
             }
         }

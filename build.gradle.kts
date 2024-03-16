@@ -19,7 +19,7 @@ subprojects {
             install(BUKKIT_ALL, BUNGEE, VELOCITY)
         }
         version {
-            taboolib = "6.1.1-beta7"
+            taboolib = "6.1.1-beta10"
             coroutines = null
         }
     }
@@ -41,7 +41,7 @@ subprojects {
         compileOnly(kotlin("stdlib"))
         compileOnly("com.google.code.gson:gson:2.8.5")
         compileOnly("com.google.guava:guava:21.0")
-        compileOnly("net.kyori:adventure-api:4.15.0")
+        compileOnly("net.kyori:adventure-api:4.16.0")
     }
 
     // 编译配置

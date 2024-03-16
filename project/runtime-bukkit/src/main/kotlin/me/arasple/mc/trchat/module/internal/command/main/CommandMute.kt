@@ -1,12 +1,10 @@
 package me.arasple.mc.trchat.module.internal.command.main
 
-import me.arasple.mc.trchat.api.impl.BukkitProxyManager
 import me.arasple.mc.trchat.module.conf.file.Settings
 import me.arasple.mc.trchat.module.internal.TrChatBukkit
 import me.arasple.mc.trchat.util.data
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
-import org.bukkit.entity.Player
 import taboolib.common.LifeCycle
 import taboolib.common.platform.Awake
 import taboolib.common.platform.Platform
@@ -14,9 +12,9 @@ import taboolib.common.platform.PlatformSide
 import taboolib.common.platform.command.command
 import taboolib.common.platform.command.suggest
 import taboolib.common.platform.command.suggestUncheck
-import taboolib.common5.Demand
 import taboolib.common5.util.parseMillis
 import taboolib.expansion.createHelper
+import taboolib.platform.util.onlinePlayers
 import taboolib.platform.util.sendLang
 import java.text.SimpleDateFormat
 
@@ -38,38 +36,21 @@ object CommandMute {
         command("mute", listOf("trmute"), description = "Mute a player", permission = "trchat.command.mute") {
             dynamic("player") {
                 suggest {
-                    BukkitProxyManager.getPlayerNames().keys.toList()
+                    onlinePlayers.map { it.name }
                 }
                 execute<CommandSender> { sender, ctx, _ ->
-                    val player = Bukkit.getPlayer(ctx["player"])
-                        ?: return@execute sender.sendLang("Command-Player-Not-Exist")
-                    val data = player.data
-                    data.updateMuteTime("999d".parseMillis())
-                    sender.sendLang("Mute-Muted-Player", player.name, "999d", "null")
-                    (player as? Player)
-                        ?.sendLang("General-Muted", muteDateFormat.format(data.muteTime), data.muteReason)
+                    mute(sender, ctx["player"], "999d", "null")
                 }
-                dynamic("options", optional = true) {
+                dynamic("time") {
                     suggestUncheck {
-                        listOf("-t 1h", "-t 2d", "-t 15m", "-r Reason", "--cancel")
+                        listOf("1h", "2d", "15m")
                     }
-                    execute<CommandSender> { sender, ctx, argument ->
-                        val player = Bukkit.getPlayer(ctx["player"])
-                            ?: return@execute sender.sendLang("Command-Player-Not-Exist")
-                        val data = player.data
-                        val de = Demand("mute $argument")
-                        if (de.tags.contains("cancel")) {
-                            data.updateMuteTime(0)
-                            sender.sendLang("Mute-Cancel-Muted-Player", player.name)
-                            (player as? Player)?.sendLang("General-Cancel-Muted")
-                        } else {
-                            val time = de.get("t") ?: "999d"
-                            val reason = de.get("r") ?: "null"
-                            data.updateMuteTime(time.parseMillis())
-                            data.setMuteReason(reason)
-                            sender.sendLang("Mute-Muted-Player", player.name, time, reason)
-                            (player as? Player)
-                                ?.sendLang("General-Muted", muteDateFormat.format(data.muteTime), data.muteReason)
+                    execute<CommandSender> { sender, ctx, _ ->
+                        mute(sender, ctx["player"], ctx["time"], "null")
+                    }
+                    dynamic("reason") {
+                        execute<CommandSender> { sender, ctx, _ ->
+                            mute(sender, ctx["player"], ctx["time"], ctx["reason"])
                         }
                     }
                 }
@@ -81,17 +62,27 @@ object CommandMute {
         command("unmute", listOf("trunmute"), description = "Unmute a player", permission = "trchat.command.unmute") {
             dynamic("player") {
                 suggest {
-                    BukkitProxyManager.getPlayerNames().keys.toList()
+                    onlinePlayers.map { it.name }
                 }
                 execute<CommandSender> { sender, ctx, _ ->
                     val player = Bukkit.getPlayer(ctx["player"])
                         ?: return@execute sender.sendLang("Command-Player-Not-Exist")
                     player.data.updateMuteTime(0)
                     sender.sendLang("Mute-Cancel-Muted-Player", player.name)
-                    (player as? Player)?.sendLang("General-Cancel-Muted")
+                    player.sendLang("General-Cancel-Muted")
                 }
             }
         }
+    }
+
+    fun mute(sender: CommandSender, name: String, time: String, reason: String) {
+        val player = Bukkit.getPlayer(name)
+            ?: return sender.sendLang("Command-Player-Not-Exist")
+        val data = player.data
+        data.updateMuteTime(time.parseMillis())
+        data.setMuteReason(reason)
+        sender.sendLang("Mute-Muted-Player", player.name, time, reason)
+        player.sendLang("General-Muted", muteDateFormat.format(data.muteTime), data.muteReason)
     }
 
     @Awake(LifeCycle.ENABLE)

@@ -4,6 +4,7 @@ import me.arasple.mc.trchat.api.nms.NMS
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
+import org.bukkit.inventory.ItemStack
 import taboolib.library.reflex.Reflex.Companion.invokeMethod
 import taboolib.module.chat.ComponentText
 import taboolib.module.chat.Components
@@ -28,6 +29,10 @@ fun gson(string: String) = (gsonSerializer as GsonComponentSerializer).deseriali
 fun Component.toNative() = Components.parseRaw(gson(this))
 
 fun ComponentText.toAdventure() = gson(toRawMessage())
+
+fun ComponentText.hoverItemAdventure(item: ItemStack): ComponentText {
+    return toAdventure().hoverEvent(item).toNative()
+}
 
 fun Packet.getComponent(): ComponentText? {
     return when (name) {

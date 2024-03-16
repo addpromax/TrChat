@@ -2,6 +2,7 @@ package me.arasple.mc.trchat.util
 
 import me.arasple.mc.trchat.TrChat
 import me.arasple.mc.trchat.api.nms.NMS
+import me.arasple.mc.trchat.module.adventure.hoverItemAdventure
 import me.arasple.mc.trchat.util.color.colorify
 import org.bukkit.Material
 import org.bukkit.block.ShulkerBox
@@ -20,7 +21,7 @@ fun String.parseSimple() = component().build {
 
 fun ComponentText.hoverItemFixed(item: ItemStack): ComponentText {
     if (Folia.isFolia) {
-        return hoverText("Folia is unsupported! Click to view it.")
+        return hoverItemAdventure(item)
     }
     var newItem = item.optimizeShulkerBox()
     newItem = NMS.instance.optimizeNBT(newItem)

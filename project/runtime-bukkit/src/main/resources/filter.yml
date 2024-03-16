@@ -8,7 +8,8 @@ Cloud-Thesaurus:
   Ignored: ['nt']
   Urls:
     - 'https://raw.githubusercontent.com/Yurinann/Filter-Thesaurus-Cloud/main/database.json' # 感谢南城提供的词库
-    - 'https://raw.githubusercontent.com/konsheng/Sensitive-lexicon/main/ThirdPartyCompatibleFormats/TrChat/SensitiveLexicon.json'
+    # 有时导致误判 自行开启
+    # - 'https://raw.githubusercontent.com/konsheng/Sensitive-lexicon/main/ThirdPartyCompatibleFormats/TrChat/SensitiveLexicon.json'
 
 Local:
   - NMSL

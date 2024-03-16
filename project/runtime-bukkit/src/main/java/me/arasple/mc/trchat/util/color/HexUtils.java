@@ -126,8 +126,7 @@ public final class HexUtils {
                 char c = chars[i];
                 if (c == '&' && i + 1 < chars.length) {
                     char next = chars[i + 1];
-                    org.bukkit.ChatColor color = org.bukkit.ChatColor.getByChar(next);
-                    if (color != null && color.isFormat()) {
+                    if (HexKt.isFormat(next)) {
                         compoundedFormat += String.valueOf(ChatColor.COLOR_CHAR) + next;
                         i++; // Skip next character
                         continue;
@@ -188,8 +187,7 @@ public final class HexUtils {
                 char c = chars[i];
                 if (c == '&' && i + 1 < chars.length) {
                     char next = chars[i + 1];
-                    org.bukkit.ChatColor color = org.bukkit.ChatColor.getByChar(next);
-                    if (color != null && color.isFormat()) {
+                    if (HexKt.isFormat(next)) {
                         compoundedFormat += String.valueOf(ChatColor.COLOR_CHAR) + next;
                         i++; // Skip next character
                         continue;

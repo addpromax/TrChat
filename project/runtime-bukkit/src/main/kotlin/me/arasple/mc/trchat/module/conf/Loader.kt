@@ -160,7 +160,7 @@ object Loader {
                 val suffix = parseGroups(map["suffix"] as? LinkedHashMap<*, *>)
                 Format(condition, priority, prefix, msg, suffix)
             }.sortedBy { it.priority }
-            val console = conf.getMapList("Console").firstOrNull()?.let { map ->
+            val console = conf.getMapList("Console").map { map ->
                 val prefix = parseGroups(map["prefix"] as LinkedHashMap<*, *>)
                 val msg = parseMsg(map["msg"] as LinkedHashMap<*, *>)
                 val suffix = parseGroups(map["suffix"] as? LinkedHashMap<*, *>)
@@ -177,7 +177,7 @@ object Loader {
                 val suffix = parseGroups(map["suffix"] as? LinkedHashMap<*, *>)
                 Format(condition, priority, prefix, msg, suffix)
             }.sortedBy { it.priority }
-            val console = conf.getMapList("Console").firstOrNull()?.let { map ->
+            val console = conf.getMapList("Console").map { map ->
                 val prefix = parseGroups(map["prefix"] as LinkedHashMap<*, *>)
                 val msg = parseMsg(map["msg"] as LinkedHashMap<*, *>)
                 val suffix = parseGroups(map["suffix"] as? LinkedHashMap<*, *>)

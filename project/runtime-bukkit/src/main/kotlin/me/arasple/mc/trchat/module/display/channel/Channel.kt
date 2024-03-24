@@ -35,7 +35,7 @@ open class Channel(
     val bindings: ChannelBindings,
     val events: ChannelEvents,
     val formats: List<Format>,
-    val consoleFormat: Format? = null
+    val consoleFormat: List<Format>
 ) {
 
     val listeners: MutableSet<String> = mutableSetOf()
@@ -102,7 +102,7 @@ open class Channel(
             return execute(sender, message)
         }
         val component = Components.empty()
-        consoleFormat?.let { format ->
+        consoleFormat.firstOrNull()?.let { format ->
             format.prefix.forEach { prefix ->
                 component.append(prefix.value[0].content.toTextComponent(sender)) }
             component.append(format.msg.createComponent(sender, message, settings.disabledFunctions))

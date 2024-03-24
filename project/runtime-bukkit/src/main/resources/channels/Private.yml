@@ -23,7 +23,7 @@ Receiver:
       default-color: 'f'
       hover: '&7日期: %server_time_HH:mm:ss%'
 
-# Can't use placeholders!
+# Placeholders & Conditions are available only when not proxy!
 Console:
   - prefix:
       server:

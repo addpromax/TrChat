@@ -40,7 +40,7 @@ class PrivateChannel(
     events: ChannelEvents,
     val sender: List<Format>,
     val receiver: List<Format>,
-    consoleFormat: Format?
+    consoleFormat: List<Format>
 ) : Channel(id, settings, bindings, events, emptyList(), consoleFormat) {
 
     var consolePrivateTo: String? = null
@@ -104,13 +104,26 @@ class PrivateChannel(
         }
         val to = consolePrivateTo ?: return ChannelExecuteResult(failedReason = ChannelExecuteResult.FailReason.NO_RECEIVER)
         val component = Components.empty()
-        consoleFormat?.let { format ->
-            format.prefix.forEach { prefix ->
-                component.append(prefix.value[0].content.toTextComponent(sender)) }
-            component.append(format.msg.createComponent(sender, message, settings.disabledFunctions))
-            format.suffix.forEach { suffix ->
-                component.append(suffix.value[0].content.toTextComponent(sender)) }
-        } ?: return ChannelExecuteResult(failedReason = ChannelExecuteResult.FailReason.NO_FORMAT)
+        val toPlayer = Bukkit.getPlayer(to)
+        if (toPlayer?.isOnline == true) {
+            consoleFormat.firstOrNull { it.condition.pass(toPlayer) }?.let { format ->
+                format.prefix
+                    .mapNotNull { prefix -> prefix.value.firstOrNull { it.condition.pass(toPlayer) }?.content?.toTextComponent(toPlayer) }
+                    .forEach { prefix -> component.append(prefix) }
+                component.append(format.msg.createComponent(toPlayer, message, settings.disabledFunctions))
+                format.suffix
+                    .mapNotNull { suffix -> suffix.value.firstOrNull { it.condition.pass(toPlayer) }?.content?.toTextComponent(toPlayer) }
+                    .forEach { suffix -> component.append(suffix) }
+            } ?: return ChannelExecuteResult(failedReason = ChannelExecuteResult.FailReason.NO_FORMAT)
+        } else {
+            consoleFormat.firstOrNull()?.let { format ->
+                format.prefix.forEach { prefix ->
+                    component.append(prefix.value[0].content.toTextComponent(sender)) }
+                component.append(format.msg.createComponent(sender, message, settings.disabledFunctions))
+                format.suffix.forEach { suffix ->
+                    component.append(suffix.value[0].content.toTextComponent(sender)) }
+            } ?: return ChannelExecuteResult(failedReason = ChannelExecuteResult.FailReason.NO_FORMAT)
+        }
 
         console().sendComponent(null, component)
         if (settings.proxy && BukkitProxyManager.processor != null) {

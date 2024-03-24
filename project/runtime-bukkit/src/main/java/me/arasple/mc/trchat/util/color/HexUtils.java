@@ -226,6 +226,7 @@ public final class HexUtils {
     }
 
     public static String parseLegacy(String message) {
+        message = message.replace("&r", "&f").replace("§r", "§f");
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 

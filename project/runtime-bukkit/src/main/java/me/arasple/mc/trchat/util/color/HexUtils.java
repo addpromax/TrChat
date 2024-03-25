@@ -247,9 +247,9 @@ public final class HexUtils {
     }
 
     private static String cleanHex(String hex) {
-        if (hex.startsWith("<") || hex.startsWith("{")) {
-            return hex.substring(1, hex.length() - 1);
-        } else if (hex.startsWith("&")) {
+        if (hex.startsWith("&{")) {
+            return hex.substring(2, hex.length() - 1);
+        } else if (hex.startsWith("&#")) {
             return hex.substring(1);
         } else {
             return hex;

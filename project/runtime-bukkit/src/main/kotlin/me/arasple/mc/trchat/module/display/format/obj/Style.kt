@@ -1,8 +1,10 @@
 package me.arasple.mc.trchat.module.display.format.obj
 
+import me.arasple.mc.trchat.module.conf.file.Settings
 import me.arasple.mc.trchat.module.internal.script.Condition
 import me.arasple.mc.trchat.util.color.colorify
 import me.arasple.mc.trchat.util.parseInline
+import me.arasple.mc.trchat.util.parseSimple
 import me.arasple.mc.trchat.util.pass
 import me.arasple.mc.trchat.util.setPlaceholders
 import org.bukkit.command.CommandSender
@@ -31,7 +33,11 @@ sealed interface Style {
 
         data class Text(override val contents: List<Pair<String, Condition?>>) : Hover {
             override fun process(component: ComponentText, content: String) {
-                component.hoverText(content)
+                if (Settings.simpleHover) {
+                    component.hoverText(content.parseSimple())
+                } else {
+                    component.hoverText(content.colorify())
+                }
             }
         }
 
@@ -90,7 +96,7 @@ sealed interface Style {
                 }
                 is Hover.Text -> {
                     contents.filter { it.second.pass(sender) }.joinToString("\n") { it.first }
-                        .parseInline(sender).setPlaceholders(sender).replaceWithOrder(*vars).colorify()
+                        .parseInline(sender).setPlaceholders(sender).replaceWithOrder(*vars)
                 }
                 else -> {
                     contents.firstOrNull { it.second.pass(sender) }?.first

@@ -1,6 +1,8 @@
 package me.arasple.mc.trchat.module.internal.listener
 
 import me.arasple.mc.trchat.TrChat
+import me.arasple.mc.trchat.module.adventure.toAdventure
+import me.arasple.mc.trchat.module.internal.TrChatBukkit
 import me.arasple.mc.trchat.util.color.MessageColors
 import me.arasple.mc.trchat.util.parseSimple
 import org.bukkit.event.inventory.InventoryType
@@ -30,6 +32,10 @@ object ListenerAnvilChange {
     var color = true
         private set
 
+    @ConfigNode("Simple-Component.Anvil", "settings.yml")
+    var simple = false
+        private set
+
     @Suppress("Deprecation")
     @SubscribeEvent(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun onAnvilCraft(e: PrepareAnvilEvent) {
@@ -46,12 +52,10 @@ object ListenerAnvilChange {
             if (filter) {
                 setDisplayName(TrChat.api().getFilterManager().filter(displayName, adaptPlayer(p)).filtered)
             }
-            if (color) {
-                if (p.hasPermission("trchat.color.simple")) {
-                    setDisplayNameComponent(arrayOf(displayName.parseSimple().toSpigotObject()))
-                } else {
-                    setDisplayName(MessageColors.replaceWithPermission(p, displayName, MessageColors.Type.ANVIL))
-                }
+            if (simple && TrChatBukkit.isPaperEnv && p.hasPermission("trchat.simple.anvil")) {
+                displayName(displayName.parseSimple().toAdventure())
+            } else if (color) {
+                setDisplayName(MessageColors.replaceWithPermission(p, displayName, MessageColors.Type.ANVIL))
             }
         }
         e.result = result

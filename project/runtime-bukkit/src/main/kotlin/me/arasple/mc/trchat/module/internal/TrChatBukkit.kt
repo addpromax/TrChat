@@ -28,7 +28,6 @@ object TrChatBukkit : Plugin() {
 
     var isGlobalMuting = false
 
-    @Awake(LifeCycle.CONST)
     internal fun detectPaperEnv() {
         try {
             // Paper 1.16.5+
@@ -40,12 +39,20 @@ object TrChatBukkit : Plugin() {
         }
     }
 
+    @Awake(LifeCycle.CONST)
+    internal fun onConst() {
+        detectPaperEnv()
+//        registerLifeCycleTask(LifeCycle.INIT, 0) {
+//            YamlUpdater.update("settings.yml", updateExists = false)
+//        }
+    }
+
     override fun onLoad() {
         console().sendLang("Plugin-Loading", Bukkit.getBukkitVersion())
     }
 
     override fun onEnable() {
-        if (Folia.isFolia) {
+        if (!Settings.usePackets || Folia.isFolia) {
             disablePacketListener()
         }
         BukkitProxyManager.processor

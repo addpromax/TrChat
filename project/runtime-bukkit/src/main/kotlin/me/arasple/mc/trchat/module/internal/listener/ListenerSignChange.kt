@@ -28,6 +28,10 @@ object ListenerSignChange {
     var color = true
         private set
 
+    @ConfigNode("Simple-Component.Sign", "settings.yml")
+    var simple = false
+        private set
+
     @Suppress("Deprecation")
     @SubscribeEvent(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun onSignChange(e: SignChangeEvent) {
@@ -37,12 +41,10 @@ object ListenerSignChange {
             if (filter) {
                 e.setLine(index, TrChat.api().getFilterManager().filter(e.getLine(index) ?: "", adaptPlayer(p)).filtered)
             }
-            if (color) {
-                if (TrChatBukkit.isPaperEnv && p.hasPermission("trchat.color.simple")) {
-                    e.line(index, (e.getLine(index) ?: "").parseSimple().toAdventure())
-                } else {
-                    e.setLine(index, MessageColors.replaceWithPermission(p, e.getLine(index) ?: "", MessageColors.Type.SIGN))
-                }
+            if (simple && TrChatBukkit.isPaperEnv && p.hasPermission("trchat.simple.sign")) {
+                e.line(index, (e.getLine(index) ?: "").parseSimple().toAdventure())
+            } else if (color) {
+                e.setLine(index, MessageColors.replaceWithPermission(p, e.getLine(index) ?: "", MessageColors.Type.SIGN))
             }
         }
     }

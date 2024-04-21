@@ -24,6 +24,10 @@ object Settings {
     lateinit var conf: Configuration
         private set
 
+    @ConfigNode("Options.Use-Packets", "settings.yml")
+    var usePackets = true
+        private set
+
     @ConfigNode("Channel.Default", "settings.yml")
     var defaultChannel = "Normal"
         private set
@@ -41,6 +45,10 @@ object Settings {
 
     @ConfigNode("Options.Component-Max-Length", "settings.yml")
     var componentMaxLength = 32700
+        private set
+
+    @ConfigNode("Simple-Component.Hover", "settings.yml")
+    var simpleHover = false
         private set
 
     @Awake(LifeCycle.ENABLE)

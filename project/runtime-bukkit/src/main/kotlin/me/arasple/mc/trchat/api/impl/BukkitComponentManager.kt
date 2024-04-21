@@ -70,7 +70,7 @@ object BukkitComponentManager : ComponentManager {
             event.message
         }
         if (commandSender is Player) {
-            NMS.instance.sendMessage(commandSender, newComponent, event.sender)
+            NMS.instance.sendMessage(commandSender, newComponent, event.sender, Settings.usePackets)
         } else {
             newComponent.sendTo(adaptCommandSender(commandSender))
         }

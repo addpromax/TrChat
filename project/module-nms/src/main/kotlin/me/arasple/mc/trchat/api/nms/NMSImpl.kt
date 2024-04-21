@@ -60,8 +60,8 @@ class NMSImpl : NMS() {
         }
     }
 
-    override fun sendMessage(receiver: Player, component: ComponentText, sender: UUID?) {
-        if (Folia.isFolia || ServerUtil.isModdedServer) {
+    override fun sendMessage(receiver: Player, component: ComponentText, sender: UUID?, usePacket: Boolean) {
+        if (!usePacket || Folia.isFolia || ServerUtil.isModdedServer) {
             component.sendTo(adaptPlayer(receiver))
             return
         }

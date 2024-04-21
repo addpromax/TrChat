@@ -8,6 +8,7 @@ import me.arasple.mc.trchat.module.internal.proxy.BukkitProxyProcessor
 import me.arasple.mc.trchat.module.internal.proxy.redis.RedisManager
 import me.arasple.mc.trchat.util.parseString
 import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.plugin.messaging.PluginMessageRecipient
 import org.spigotmc.SpigotConfig
 import taboolib.common.platform.Platform
@@ -38,12 +39,14 @@ object BukkitProxyManager : ClientMessageManager {
     override var port = 25565
 
     var allPlayerNames = mapOf<String, String?>()
-        get() = if (mode != ProxyMode.REDIS) {
-            field
-        } else {
+        get() = if (mode == ProxyMode.NONE) {
+            onlinePlayers.associate { it.name to ChatColor.stripColor(it.displayName) }
+        } else if (mode == ProxyMode.REDIS) {
             val result = mutableMapOf<String, String?>()
             (processor as BukkitProxyProcessor.RedisSide).allNames.values.forEach { result += it }
             result
+        } else {
+            field
         }
 
     init {
@@ -108,21 +111,24 @@ object BukkitProxyManager : ClientMessageManager {
     }
 
     override fun getPlayerNames(): Map<String, String?> {
-        if (mode == ProxyMode.NONE) {
-            return onlinePlayers.associate { it.name to it.displayName }
-        }
         return allPlayerNames
+    }
+
+    fun getPlayerNamesMerged(): Set<String> {
+        return allPlayerNames.let { it.keys + it.values.filterNotNull() }
     }
 
     override fun getExactName(name: String): String? {
         var player = Bukkit.getPlayerExact(name)
         if (player == null) {
-            player = Bukkit.getOnlinePlayers().firstOrNull { it.displayName == name }
+            player = Bukkit.getOnlinePlayers().firstOrNull { ChatColor.stripColor(it.displayName) == name }
         }
         return if (player != null && player.isOnline) {
             player.name
         } else {
-            getPlayerNames().keys.firstOrNull { it.equals(name, ignoreCase = true) }
+            getPlayerNames().entries.firstOrNull {
+                it.key.equals(name, ignoreCase = true) || it.value?.equals(name, ignoreCase = true) == true
+            }?.key
         }
     }
 
@@ -161,7 +167,7 @@ object BukkitProxyManager : ClientMessageManager {
     fun updateNames() {
         sendMessage(onlinePlayers.firstOrNull(), arrayOf(
             "UpdateNames",
-            onlinePlayers.joinToString(",") { it.name + "-" + it.displayName },
+            onlinePlayers.joinToString(",") { it.name + "-" + ChatColor.stripColor(it.displayName) },
             port.toString()
         ))
     }

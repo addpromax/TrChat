@@ -70,12 +70,7 @@ class PrivateChannel(
             }
             dynamic("player", optional = true) {
                 suggest {
-                    BukkitProxyManager.getPlayerNames().flatMap { (key, value) ->
-                        if (key !in PlayerData.vanishing) {
-                            if (value == null || key == value) listOf(key) else listOf(key, value)
-                        }
-                        else emptyList()
-                    }
+                    BukkitProxyManager.getPlayerNamesMerged().filter { it !in PlayerData.vanishing }
                 }
                 execute<Player> { sender, _, argument ->
                     sender.session.lastPrivateTo = BukkitProxyManager.getExactName(argument)

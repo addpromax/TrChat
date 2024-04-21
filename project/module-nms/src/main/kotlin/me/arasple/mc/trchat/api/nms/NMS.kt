@@ -19,7 +19,7 @@ abstract class NMS {
      */
     abstract fun rawMessageFromCraftChatMessage(component: Any): String
 
-    abstract fun sendMessage(receiver: Player, component: ComponentText, sender: UUID?)
+    abstract fun sendMessage(receiver: Player, component: ComponentText, sender: UUID?, usePacket: Boolean = true)
 
     abstract fun hoverItem(component: ComponentText, itemStack: ItemStack): ComponentText
 

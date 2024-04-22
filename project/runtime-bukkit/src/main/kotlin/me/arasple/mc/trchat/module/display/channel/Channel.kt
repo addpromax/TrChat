@@ -65,7 +65,7 @@ open class Channel(
         ) {
             execute<Player> { sender, _, _ ->
                 if (sender.session.channel == this@Channel.id) {
-                    quit(sender)
+                    quit(sender, setDefault = true)
                 } else {
                     join(sender, this@Channel)
                 }

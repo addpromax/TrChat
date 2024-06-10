@@ -52,7 +52,7 @@ object TrChatBukkit : Plugin() {
     }
 
     override fun onEnable() {
-        if (!Settings.usePackets || Folia.isFolia) {
+        if (!Settings.usePackets || Folia.isFolia || Bukkit.getPluginManager().isPluginEnabled("Geyser-Spigot")) {
             disablePacketListener()
         }
         BukkitProxyManager.processor

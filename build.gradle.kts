@@ -19,7 +19,7 @@ subprojects {
             install(BUKKIT_ALL, BUNGEE, VELOCITY)
         }
         version {
-            taboolib = "6.1.1"
+            taboolib = "6.1.2-beta4"
             coroutines = null
         }
     }

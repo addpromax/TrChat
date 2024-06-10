@@ -6,6 +6,7 @@ import me.arasple.mc.trchat.api.impl.BukkitProxyManager
 import me.arasple.mc.trchat.module.conf.file.Settings
 import me.arasple.mc.trchat.module.display.channel.obj.*
 import me.arasple.mc.trchat.module.display.format.Format
+import me.arasple.mc.trchat.module.display.format.MsgComponent
 import me.arasple.mc.trchat.module.display.function.Function
 import me.arasple.mc.trchat.module.internal.data.ChatLogs
 import me.arasple.mc.trchat.module.internal.service.Metrics
@@ -105,7 +106,7 @@ open class Channel(
         consoleFormat.firstOrNull()?.let { format ->
             format.prefix.forEach { prefix ->
                 component.append(prefix.value[0].content.toTextComponent(sender)) }
-            component.append(format.msg.createComponent(sender, message, settings.disabledFunctions))
+            component.append((format.msg[0].content as MsgComponent).createComponent(sender, message, settings.disabledFunctions))
             format.suffix.forEach { suffix ->
                 component.append(suffix.value[0].content.toTextComponent(sender)) }
         } ?: return ChannelExecuteResult(failedReason = ChannelExecuteResult.FailReason.NO_FORMAT)
@@ -147,7 +148,9 @@ open class Channel(
             format.prefix
                 .mapNotNull { prefix -> prefix.value.firstOrNull { it.condition.pass(player) }?.content?.toTextComponent(player) }
                 .forEach { prefix -> component.append(prefix) }
-            component.append(format.msg.createComponent(player, msg, settings.disabledFunctions))
+            format.msg.firstOrNull { it.condition.pass(player) }
+                ?.let { component.append((it.content as MsgComponent).createComponent(player, msg, settings.disabledFunctions)) }
+                ?: return ChannelExecuteResult(failedReason = ChannelExecuteResult.FailReason.NO_FORMAT)
             format.suffix
                 .mapNotNull { suffix -> suffix.value.firstOrNull { it.condition.pass(player) }?.content?.toTextComponent(player) }
                 .forEach { suffix -> component.append(suffix) }

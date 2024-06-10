@@ -38,7 +38,8 @@ object TrChatVelocity : Plugin() {
                 suggest {
                     listOf("on", "off")
                 }
-                execute<ProxyCommandSender> { _, _, argument ->
+                execute<ProxyCommandSender> { sender, _, argument ->
+                    if (!sender.hasPermission("trchatv.muteallservers")) return@execute
                     VelocityProxyManager.sendMessageToAll("GlobalMute", argument)
                 }
             }

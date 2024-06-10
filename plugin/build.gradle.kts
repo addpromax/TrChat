@@ -16,6 +16,7 @@ taboolib {
             name("ItemsAdder").with("bukkit").optional(true)
             name("Nova").with("bukkit").optional(true)
             name("Multiverse-Core").with("bukkit").loadafter(true)
+            name("Geyser-Spigot").with("bukkit").loadafter(true)
         }
     }
     relocate("com.eatthepath.uuid.", "${rootProject.group}.library.uuid.")

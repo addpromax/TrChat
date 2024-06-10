@@ -1,5 +1,6 @@
 dependencies {
     compileOnly(project(":project:common"))
+//    compileOnly("ink.ptms.core:v12005:12005:mapped")
     compileOnly("ink.ptms.core:v12004:12004:mapped")
     compileOnly("ink.ptms.core:v12002:12002:mapped")
     compileOnly("ink.ptms.core:v11903:11903:mapped")

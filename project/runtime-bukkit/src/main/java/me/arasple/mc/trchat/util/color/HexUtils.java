@@ -206,15 +206,17 @@ public final class HexUtils {
     }
 
     public static String parseHex(String message) {
-        if (BukkitUtilKt.isDragonCoreHooked())
-            return message;
-
         String parsed = message;
 
         for (Pattern pattern : HEX_PATTERNS) {
             Matcher matcher = pattern.matcher(parsed);
             while (matcher.find()) {
-                String color = translateHex(cleanHex(matcher.group())).toString();
+                String color;
+                if (BukkitUtilKt.isDragonCoreHooked()) {
+                    color = '§' + cleanHex(matcher.group());
+                } else {
+                    color = translateHex(cleanHex(matcher.group())).toString();
+                }
                 String before = parsed.substring(0, matcher.start());
                 String after = parsed.substring(matcher.end());
                 parsed = before + color + after;

@@ -5,7 +5,7 @@ repositories {
 
 dependencies {
     compileOnly(project(":project:common"))
-    compileOnly("ink.ptms.core:v12004:12004:universal")
+    compileOnly("ink.ptms.core:v12005:12005:universal")
 
     compileOnly("com.discordsrv:discordsrv:1.26.0") { isTransitive = false }
     compileOnly("com.willfp:eco:6.35.1") { isTransitive = false }

@@ -10,6 +10,6 @@ class Format(
     val condition: Condition?,
     val priority: Int,
     val prefix: Map<String, List<Group>>,
-    val msg: MsgComponent,
+    val msg: List<Group>,
     val suffix: Map<String, List<Group>>
 )

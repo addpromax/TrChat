@@ -7,6 +7,7 @@ import me.arasple.mc.trchat.module.display.channel.obj.ChannelEvents
 import me.arasple.mc.trchat.module.display.channel.obj.ChannelExecuteResult
 import me.arasple.mc.trchat.module.display.channel.obj.ChannelSettings
 import me.arasple.mc.trchat.module.display.format.Format
+import me.arasple.mc.trchat.module.display.format.MsgComponent
 import me.arasple.mc.trchat.module.internal.command.main.CommandReply
 import me.arasple.mc.trchat.module.internal.data.ChatLogs
 import me.arasple.mc.trchat.module.internal.data.PlayerData
@@ -23,7 +24,6 @@ import taboolib.common.platform.command.suggest
 import taboolib.common.platform.function.console
 import taboolib.common.platform.function.getProxyPlayer
 import taboolib.common.util.subList
-import taboolib.module.chat.ComponentText
 import taboolib.module.chat.Components
 import taboolib.module.lang.sendLang
 import taboolib.platform.util.onlinePlayers
@@ -105,7 +105,9 @@ class PrivateChannel(
                 format.prefix
                     .mapNotNull { prefix -> prefix.value.firstOrNull { it.condition.pass(toPlayer) }?.content?.toTextComponent(toPlayer) }
                     .forEach { prefix -> component.append(prefix) }
-                component.append(format.msg.createComponent(toPlayer, message, settings.disabledFunctions))
+                format.msg.firstOrNull { it.condition.pass(toPlayer) }
+                    ?.let { component.append((it.content as MsgComponent).createComponent(toPlayer, message, settings.disabledFunctions)) }
+                    ?: return ChannelExecuteResult(failedReason = ChannelExecuteResult.FailReason.NO_FORMAT)
                 format.suffix
                     .mapNotNull { suffix -> suffix.value.firstOrNull { it.condition.pass(toPlayer) }?.content?.toTextComponent(toPlayer) }
                     .forEach { suffix -> component.append(suffix) }
@@ -114,7 +116,7 @@ class PrivateChannel(
             consoleFormat.firstOrNull()?.let { format ->
                 format.prefix.forEach { prefix ->
                     component.append(prefix.value[0].content.toTextComponent(sender)) }
-                component.append(format.msg.createComponent(sender, message, settings.disabledFunctions))
+                component.append((format.msg[0].content as MsgComponent).createComponent(sender, message, settings.disabledFunctions))
                 format.suffix.forEach { suffix ->
                     component.append(suffix.value[0].content.toTextComponent(sender)) }
             } ?: return ChannelExecuteResult(failedReason = ChannelExecuteResult.FailReason.NO_FORMAT)
@@ -159,13 +161,15 @@ class PrivateChannel(
             ?: return ChannelExecuteResult(failedReason = ChannelExecuteResult.FailReason.EVENT)
 
         val send = Components.empty()
-        var msgComponent: ComponentText? = null
+        val msgComponent = Components.empty()
         sender.firstOrNull { it.condition.pass(player) }?.let { format ->
             format.prefix
                 .mapNotNull { prefix -> prefix.value.firstOrNull { it.condition.pass(player) }?.content?.toTextComponent(player) }
                 .forEach { prefix -> send.append(prefix) }
-            msgComponent = format.msg.createComponent(player, msg, settings.disabledFunctions)
-            send.append(msgComponent!!)
+            format.msg.firstOrNull { it.condition.pass(player) }
+                ?.let { msgComponent.append((it.content as MsgComponent).createComponent(player, msg, settings.disabledFunctions)) }
+                ?: return ChannelExecuteResult(failedReason = ChannelExecuteResult.FailReason.NO_FORMAT)
+            send.append(msgComponent)
             format.suffix
                 .mapNotNull { suffix -> suffix.value.firstOrNull { it.condition.pass(player) }?.content?.toTextComponent(player) }
                 .forEach { suffix -> send.append(suffix) }
@@ -176,7 +180,7 @@ class PrivateChannel(
             format.prefix
                 .mapNotNull { prefix -> prefix.value.firstOrNull { it.condition.pass(player) }?.content?.toTextComponent(player) }
                 .forEach { prefix -> receive.append(prefix) }
-            receive.append(msgComponent!!)
+            receive.append(msgComponent)
             format.suffix
                 .mapNotNull { suffix -> suffix.value.firstOrNull { it.condition.pass(player) }?.content?.toTextComponent(player) }
                 .forEach { suffix -> receive.append(suffix) }
@@ -194,9 +198,9 @@ class PrivateChannel(
 
         PlayerData.spying.forEach {
             Bukkit.getPlayer(it)
-                ?.sendLang("Private-Message-Spy-Format", player.name, to, msgComponent!!.toLegacyText())
+                ?.sendLang("Private-Message-Spy-Format", player.name, to, msgComponent.toLegacyText())
         }
-        console().sendLang("Private-Message-Spy-Format", player.name, to, msgComponent!!.toLegacyText())
+        console().sendLang("Private-Message-Spy-Format", player.name, to, msgComponent.toLegacyText())
 
         CommandReply.lastMessageFrom[to] = player.name
         ChatLogs.logPrivate(player.name, to, message)

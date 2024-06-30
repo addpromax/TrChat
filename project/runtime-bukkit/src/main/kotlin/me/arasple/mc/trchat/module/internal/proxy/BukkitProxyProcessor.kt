@@ -1,12 +1,8 @@
 package me.arasple.mc.trchat.module.internal.proxy
 
 import me.arasple.mc.trchat.api.impl.BukkitProxyManager
-import me.arasple.mc.trchat.api.nms.NMS
 import me.arasple.mc.trchat.module.conf.Loader
 import me.arasple.mc.trchat.module.display.channel.Channel
-import me.arasple.mc.trchat.module.display.function.standard.EnderChestShow
-import me.arasple.mc.trchat.module.display.function.standard.InventoryShow
-import me.arasple.mc.trchat.module.display.function.standard.ItemShow
 import me.arasple.mc.trchat.module.internal.TrChatBukkit
 import me.arasple.mc.trchat.module.internal.command.main.CommandReply
 import me.arasple.mc.trchat.module.internal.proxy.redis.RedisManager
@@ -19,22 +15,15 @@ import me.arasple.mc.trchat.util.toUUID
 import org.bukkit.Bukkit
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
-import org.bukkit.inventory.Inventory
 import org.bukkit.plugin.messaging.PluginMessageListener
 import org.bukkit.plugin.messaging.PluginMessageRecipient
 import taboolib.common.platform.function.console
 import taboolib.common.platform.function.getProxyPlayer
 import taboolib.common.platform.function.submitAsync
 import taboolib.common.util.subList
-import taboolib.common5.util.decodeBase64
 import taboolib.module.chat.Components
-import taboolib.module.lang.asLangText
 import taboolib.module.lang.sendLang
-import taboolib.module.nms.MinecraftVersion
-import taboolib.module.ui.MenuHolder
-import taboolib.module.ui.type.impl.ChestImpl
 import taboolib.platform.util.bukkitPlugin
-import taboolib.platform.util.deserializeToInventory
 import taboolib.platform.util.onlinePlayers
 import java.io.IOException
 import java.util.concurrent.ExecutorService
@@ -101,17 +90,11 @@ sealed interface BukkitProxyProcessor : PluginMessageListener {
                 }
             }
             "UpdateAllNames" -> {
-                onlinePlayers.forEach {
-                    NMS.instance.removeCustomChatCompletions(it, BukkitProxyManager.allPlayerNames.keys.toList())
-                }
                 BukkitProxyManager.updateNames()
                 val names = data[1].takeIf { it != "" }?.split(",") ?: return
                 BukkitProxyManager.allPlayerNames = data[2].split(",").mapIndexed { index, displayName ->
                     names[index] to displayName.takeIf { it != "null" }
                 }.toMap()
-                onlinePlayers.forEach {
-                    NMS.instance.addCustomChatCompletions(it, BukkitProxyManager.allPlayerNames.keys.toList())
-                }
             }
             "GlobalMute" -> {
                 when (data[1]) {
@@ -127,39 +110,40 @@ sealed interface BukkitProxyProcessor : PluginMessageListener {
                 }
                 BukkitProxyManager.sendMessage(onlinePlayers.firstOrNull(), arrayOf("LoadedProxyChannel", id))
             }
-            "ItemShow" -> {
-                if (data[1] > MinecraftVersion.minecraftVersion) return
-                val name = data[2]
-                val sha1 = data[3]
-                if (ItemShow.cacheInventory.getIfPresent(sha1) == null) {
-                    val inventory = data[4].decodeBase64().deserializeToInventory(
-                        createNoClickChest(3, console().asLangText("Function-Item-Show-Title", name))
-                    )
-                    ItemShow.cacheInventory.put(sha1, inventory)
-                }
-            }
-            "InventoryShow" -> {
-                if (data[1] > MinecraftVersion.minecraftVersion) return
-                val name = data[2]
-                val sha1 = data[3]
-                if (InventoryShow.cache.getIfPresent(sha1) == null) {
-                    val inventory = data[4].decodeBase64().deserializeToInventory(
-                        createNoClickChest(6, console().asLangText("Function-Inventory-Show-Title", name))
-                    )
-                    InventoryShow.cache.put(sha1, inventory)
-                }
-            }
-            "EnderChestShow" -> {
-                if (data[1] > MinecraftVersion.minecraftVersion) return
-                val name = data[2]
-                val sha1 = data[3]
-                if (EnderChestShow.cache.getIfPresent(sha1) == null) {
-                    val inventory = data[4].decodeBase64().deserializeToInventory(
-                        createNoClickChest(3, console().asLangText("Function-EnderChest-Show-Title", name))
-                    )
-                    EnderChestShow.cache.put(sha1, inventory)
-                }
-            }
+            // TODO 1.21
+//            "ItemShow" -> {
+//                if (data[1] > MinecraftVersion.minecraftVersion) return
+//                val name = data[2]
+//                val sha1 = data[3]
+//                if (ItemShow.cacheInventory.getIfPresent(sha1) == null) {
+//                    val inventory = data[4].decodeBase64().deserializeToInventory(
+//                        createNoClickChest(3, console().asLangText("Function-Item-Show-Title", name))
+//                    )
+//                    ItemShow.cacheInventory.put(sha1, inventory)
+//                }
+//            }
+//            "InventoryShow" -> {
+//                if (data[1] > MinecraftVersion.minecraftVersion) return
+//                val name = data[2]
+//                val sha1 = data[3]
+//                if (InventoryShow.cache.getIfPresent(sha1) == null) {
+//                    val inventory = data[4].decodeBase64().deserializeToInventory(
+//                        createNoClickChest(6, console().asLangText("Function-Inventory-Show-Title", name))
+//                    )
+//                    InventoryShow.cache.put(sha1, inventory)
+//                }
+//            }
+//            "EnderChestShow" -> {
+//                if (data[1] > MinecraftVersion.minecraftVersion) return
+//                val name = data[2]
+//                val sha1 = data[3]
+//                if (EnderChestShow.cache.getIfPresent(sha1) == null) {
+//                    val inventory = data[4].decodeBase64().deserializeToInventory(
+//                        createNoClickChest(3, console().asLangText("Function-EnderChest-Show-Title", name))
+//                    )
+//                    EnderChestShow.cache.put(sha1, inventory)
+//                }
+//            }
         }
     }
 
@@ -257,15 +241,9 @@ sealed interface BukkitProxyProcessor : PluginMessageListener {
         override fun execute(data: Array<String>) {
             when (data[0]) {
                 "UpdateNames" -> {
-                    onlinePlayers.forEach {
-                        NMS.instance.removeCustomChatCompletions(it, BukkitProxyManager.allPlayerNames.keys.toList())
-                    }
                     val port = data[2].toInt()
                     val names = data[1].takeIf { it != "" }?.split(",")?.map { it.split("-", limit = 2) } ?: return
                     allNames[port] = names.associate { it[0] to it[1].takeIf { dn -> dn != "null" } }
-                    onlinePlayers.forEach {
-                        NMS.instance.addCustomChatCompletions(it, BukkitProxyManager.allPlayerNames.keys.toList())
-                    }
                 }
                 else -> super.execute(data)
             }
@@ -296,14 +274,14 @@ sealed interface BukkitProxyProcessor : PluginMessageListener {
             }
         }
 
-        fun createNoClickChest(rows: Int, title: String): Inventory {
-            return MenuHolder(object : ChestImpl(title) {
-                init {
-                    rows(rows)
-                    onClick(lock = true)
-                }
-            }).inventory
-        }
+//        fun createNoClickChest(rows: Int, title: String): Inventory {
+//            return MenuHolder(object : ChestImpl(title) {
+//                init {
+//                    rows(rows)
+//                    onClick(lock = true)
+//                }
+//            }).inventory
+//        }
 
     }
 }

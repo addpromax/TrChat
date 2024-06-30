@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     java
-    id("io.izzel.taboolib") version "2.0.11"
+    id("io.izzel.taboolib") version "2.0.12"
     id("org.jetbrains.kotlin.jvm") version "1.8.22"
 }
 
@@ -14,12 +14,12 @@ subprojects {
 
     taboolib {
         env {
-            install(UNIVERSAL, DATABASE, KETHER, METRICS, NMS_UTIL, UI)
+            install(UNIVERSAL, DATABASE, KETHER, METRICS, NMS_UTIL)
             install(EXPANSION_REDIS, EXPANSION_JAVASCRIPT, EXPANSION_PLAYER_DATABASE)
             install(BUKKIT_ALL, BUNGEE, VELOCITY)
         }
         version {
-            taboolib = "6.1.2-beta9"
+            taboolib = "6.1.2-beta10"
             coroutines = null
         }
     }

@@ -1,6 +1,5 @@
 package me.arasple.mc.trchat.module.internal.command
 
-import me.arasple.mc.trchat.module.display.menu.MenuFilterControl
 import me.arasple.mc.trchat.module.internal.TrChatBukkit
 import me.arasple.mc.trchat.module.internal.command.sub.CommandColor
 import me.arasple.mc.trchat.module.internal.command.sub.CommandRecallMessage
@@ -35,8 +34,17 @@ object CommandHandler {
 
     @CommandBody(permission = "trchat.command.chatfilter", optional = true)
     val chatFilter = subCommand {
-        execute { sender, _, _ ->
-            MenuFilterControl.displayFor(sender)
+        dynamic("option") {
+            suggest { listOf("on", "off") }
+            execute<Player> { sender, _, arg ->
+                if (arg == "on") {
+                    sender.data.setFilter(true)
+                    sender.sendMessage("§7你已经开启聊天过滤器")
+                } else {
+                    sender.data.setFilter(false)
+                    sender.sendMessage("§7你已经关闭聊天过滤器")
+                }
+            }
         }
     }
 

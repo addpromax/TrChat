@@ -2,6 +2,7 @@ package me.arasple.mc.trchat.module.internal
 
 import me.arasple.mc.trchat.TrChat
 import me.arasple.mc.trchat.api.impl.BukkitProxyManager
+import me.arasple.mc.trchat.api.nms.NMS
 import me.arasple.mc.trchat.module.conf.file.Filters
 import me.arasple.mc.trchat.module.conf.file.Functions
 import me.arasple.mc.trchat.module.conf.file.Settings
@@ -15,6 +16,7 @@ import taboolib.common.LifeCycle
 import taboolib.common.platform.*
 import taboolib.common.platform.function.console
 import taboolib.common.platform.function.pluginVersion
+import taboolib.common.platform.function.warning
 import taboolib.module.lang.sendLang
 import taboolib.module.nms.MinecraftVersion.majorLegacy
 import taboolib.module.nms.disablePacketListener
@@ -52,13 +54,17 @@ object TrChatBukkit : Plugin() {
     }
 
     override fun onEnable() {
-        if (!Settings.usePackets || Folia.isFolia || Bukkit.getPluginManager().isPluginEnabled("Geyser-Spigot")) {
-            disablePacketListener()
-        }
+        if (!Settings.usePackets
+            || Folia.isFolia
+            || Bukkit.getPluginManager().isPluginEnabled("Geyser-Spigot")
+            || majorLegacy >= 12005
+            ) disablePacketListener()
+        NMS.instance
         BukkitProxyManager.processor
         HookPlugin.printInfo()
         reload(console())
         console().sendLang("Plugin-Enabled", pluginVersion)
+        warning("In this version, some functions do not work!")
     }
 
     override fun onDisable() {

@@ -1,5 +1,7 @@
 package me.arasple.mc.trchat.util.color
 
+import me.arasple.mc.trchat.util.papiRegex
+import me.arasple.mc.trchat.util.setPlaceholders
 import org.bukkit.command.CommandSender
 
 /**
@@ -10,7 +12,7 @@ class CustomColor(val type: ColorType, val color: String) {
 
     enum class ColorType {
 
-        NORMAL, SPECIAL
+        NORMAL, SPECIAL, DYNAMIC
     }
 
     fun colored(sender: CommandSender, msg: String): String {
@@ -20,6 +22,7 @@ class CustomColor(val type: ColorType, val color: String) {
             message = when (type) {
                 ColorType.NORMAL -> color + message
                 ColorType.SPECIAL -> (color + message).parseRainbow().parseGradients()
+                ColorType.DYNAMIC -> (color.setPlaceholders(sender) + message).colorify()
             }
         }
 
@@ -32,7 +35,10 @@ class CustomColor(val type: ColorType, val color: String) {
 
         fun get(string: String): CustomColor {
             return caches.computeIfAbsent(string) {
-                val type = if (HexUtils.GRADIENT_PATTERN.matcher(it).find() || HexUtils.RAINBOW_PATTERN.matcher(it).find()) {
+                val type = if (papiRegex.containsMatchIn(string)) {
+                    ColorType.DYNAMIC
+                } else if (HexUtils.GRADIENT_PATTERN.matcher(it).find()
+                    || HexUtils.RAINBOW_PATTERN.matcher(it).find()) {
                     ColorType.SPECIAL
                 } else {
                     ColorType.NORMAL

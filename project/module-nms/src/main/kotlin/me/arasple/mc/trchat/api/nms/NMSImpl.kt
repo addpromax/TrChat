@@ -2,7 +2,6 @@ package me.arasple.mc.trchat.api.nms
 
 import me.arasple.mc.trchat.util.ServerUtil
 import me.arasple.mc.trchat.util.reportOnce
-import net.minecraft.network.protocol.game.ClientboundCustomChatCompletionsPacket
 import net.minecraft.server.v1_12_R1.ChatMessageType
 import net.minecraft.server.v1_12_R1.PacketPlayOutChat
 import org.bukkit.entity.Player
@@ -129,33 +128,6 @@ class NMSImpl : NMS() {
             t.reportOnce("Got an error optimizing item nbt")
         }
         return itemStack
-    }
-
-    override fun addCustomChatCompletions(player: Player, entries: List<String>) {
-        if (majorLegacy < 11901) return
-        try {
-            player.addCustomChatCompletions(entries)
-        } catch (_: NoClassDefFoundError) {
-        }
-    }
-
-    override fun removeCustomChatCompletions(player: Player, entries: List<String>) {
-        if (majorLegacy < 11901) return
-        try {
-            player.removeCustomChatCompletions(entries)
-        } catch (_: NoClassDefFoundError) {
-        }
-    }
-
-    override fun setCustomChatCompletions(player: Player, entries: List<String>) {
-        if (majorLegacy < 11901) return
-        try {
-            player.sendPacket(ClientboundCustomChatCompletionsPacket::class.java.invokeConstructor(
-                ClientboundCustomChatCompletionsPacket.Action.SET,
-                entries
-            ))
-        } catch (_: NoClassDefFoundError) {
-        }
     }
 
     override fun getLocaleKey(itemStack: ItemStack): LocaleKey {

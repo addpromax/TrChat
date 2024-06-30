@@ -25,7 +25,7 @@ object ListenerPackets {
      */
     @SubscribeEvent
     fun secure(e: PacketSendEvent) {
-        if (majorLegacy < 11902) return
+        if (majorLegacy < 11902 || majorLegacy >= 12005) return
         when (e.packet.name) {
             "ClientboundServerDataPacket" -> {
                 if (cheatClientSecureChat) e.packet.write("enforcesSecureChat", true)

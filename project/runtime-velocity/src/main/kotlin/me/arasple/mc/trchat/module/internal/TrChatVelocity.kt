@@ -1,6 +1,5 @@
 package me.arasple.mc.trchat.module.internal
 
-import me.arasple.mc.trchat.api.impl.VelocityChannelManager
 import me.arasple.mc.trchat.api.impl.VelocityProxyManager
 import taboolib.common.platform.Platform
 import taboolib.common.platform.PlatformSide
@@ -26,13 +25,12 @@ object TrChatVelocity : Plugin() {
     val plugin by unsafeLazy { VelocityPlugin.getInstance() }
 
     override fun onLoad() {
+        plugin.server.channelRegistrar.register(VelocityProxyManager.incoming, VelocityProxyManager.outgoing)
         VelocityConsole().sendLang("Plugin-Loading", plugin.server.version.version)
         VelocityConsole().sendLang("Plugin-Proxy-Supported", "Velocity")
     }
 
     override fun onEnable() {
-        plugin.server.channelRegistrar.register(VelocityProxyManager.incoming, VelocityProxyManager.outgoing)
-
         command("muteallservers", permission = "trchatv.muteallservers") {
             dynamic("state") {
                 suggest {
@@ -44,7 +42,6 @@ object TrChatVelocity : Plugin() {
                 }
             }
         }
-        VelocityChannelManager.loadChannels(VelocityConsole())
         VelocityConsole().sendLang("Plugin-Enabled", pluginVersion)
     }
 

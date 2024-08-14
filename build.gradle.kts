@@ -1,9 +1,11 @@
-import io.izzel.taboolib.gradle.*
+import io.izzel.taboolib.gradle.BUKKIT
+import io.izzel.taboolib.gradle.BUNGEE
+import io.izzel.taboolib.gradle.VELOCITY
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     java
-    id("io.izzel.taboolib") version "2.0.12"
+    id("io.izzel.taboolib") version "2.0.13"
     id("org.jetbrains.kotlin.jvm") version "1.8.22"
 }
 
@@ -14,13 +16,42 @@ subprojects {
 
     taboolib {
         env {
-            install(UNIVERSAL, DATABASE, KETHER, METRICS, NMS_UTIL)
-            install(EXPANSION_REDIS, EXPANSION_JAVASCRIPT, EXPANSION_PLAYER_DATABASE)
-            install(BUKKIT_ALL, BUNGEE, VELOCITY)
+            install("basic-configuration")
+            install(
+                "bukkit-hook",
+                "bukkit-util",
+                "bukkit-ui",
+                "bukkit-xseries"
+            )
+            install("database-sql")
+            install(
+                "minecraft-chat",
+                "minecraft-command-helper",
+                "minecraft-i18n",
+                "minecraft-kether",
+                "minecraft-metrics"
+            )
+            install(
+                "nms",
+                "nms-util"
+            )
+            install(
+                "database-alkaid-redis",
+                "database-player",
+                "script-javascript"
+            )
+            install(BUKKIT, BUNGEE, VELOCITY)
+            install("platform-bukkit-impl")
+//            install(UNIVERSAL, DATABASE, KETHER, METRICS, NMS_UTIL)
+//            install(EXPANSION_REDIS, EXPANSION_JAVASCRIPT, EXPANSION_PLAYER_DATABASE)
+//            install(BUKKIT_ALL, BUNGEE, VELOCITY)
+            repoTabooLib = "http://mcitd.cn:8081/repository/releases"
         }
         version {
-            taboolib = "6.1.2-beta10"
+            taboolib = "6.2.0-beta4-dev"
             coroutines = null
+//            isSkipKotlin = true
+//            isSkipKotlinRelocate = true
         }
     }
 
@@ -28,6 +59,7 @@ subprojects {
     repositories {
         mavenLocal()
         mavenCentral()
+        maven("http://mcitd.cn:8081/repository/releases") { isAllowInsecureProtocol = true }
         maven("https://jitpack.io")
         maven("https://oss.sonatype.org/content/repositories/snapshots")
         maven("https://papermc.io/repo/repository/maven-public/")

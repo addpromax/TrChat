@@ -1,7 +1,6 @@
 package me.arasple.mc.trchat.module.conf
 
 import me.arasple.mc.trchat.api.event.TrChatReloadEvent
-import me.arasple.mc.trchat.api.impl.BukkitProxyManager
 import me.arasple.mc.trchat.module.conf.file.Functions
 import me.arasple.mc.trchat.module.display.channel.Channel
 import me.arasple.mc.trchat.module.display.channel.PrivateChannel
@@ -36,7 +35,6 @@ import taboolib.common5.FileWatcher
 import taboolib.library.configuration.ConfigurationSection
 import taboolib.module.configuration.util.getMap
 import taboolib.module.lang.sendLang
-import taboolib.platform.util.onlinePlayers
 import java.io.File
 import kotlin.system.measureTimeMillis
 
@@ -72,8 +70,6 @@ object Loader {
     fun loadChannels(): Int {
         Channel.channels.values.forEach { it.unregister() }
         Channel.channels.clear()
-
-        BukkitProxyManager.sendMessage(onlinePlayers.firstOrNull(), arrayOf("FetchProxyChannels"))
 
         filterChannelFiles(folder).forEach {
             if (FileWatcher.INSTANCE.hasListener(it)) {

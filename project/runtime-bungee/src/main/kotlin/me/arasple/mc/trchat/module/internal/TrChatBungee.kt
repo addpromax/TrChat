@@ -1,6 +1,5 @@
 package me.arasple.mc.trchat.module.internal
 
-import me.arasple.mc.trchat.api.impl.BungeeChannelManager
 import me.arasple.mc.trchat.api.impl.BungeeProxyManager
 import net.md_5.bungee.api.ProxyServer
 import taboolib.common.platform.Platform
@@ -39,7 +38,6 @@ object TrChatBungee : Plugin() {
                 }
             }
         }
-        BungeeChannelManager.loadChannels(console())
         console().sendLang("Plugin-Enabled", pluginVersion)
     }
 }

@@ -22,15 +22,16 @@ object ListenerPackets {
 
     /**
      * 去除进入时右上角提示/禁止聊天举报
+     * TODO Support 1.21
      */
     @SubscribeEvent
     fun secure(e: PacketSendEvent) {
-        if (majorLegacy < 11902 || majorLegacy >= 12005) return
+        if (!cheatClientSecureChat) return
+        if (majorLegacy < 11902) return
         when (e.packet.name) {
             "ClientboundServerDataPacket" -> {
-                if (cheatClientSecureChat) e.packet.write("enforcesSecureChat", true)
+                if (majorLegacy < 12005) e.packet.write("enforcesSecureChat", true)
             }
-            "ClientboundPlayerChatHeaderPacket" -> e.isCancelled = true
         }
     }
 

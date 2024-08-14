@@ -1,6 +1,7 @@
 package me.arasple.mc.trchat.api.impl
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder
+import com.velocitypowered.api.proxy.ServerConnection
 import com.velocitypowered.api.proxy.messages.ChannelMessageSink
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier
 import com.velocitypowered.api.proxy.server.RegisteredServer
@@ -12,6 +13,7 @@ import taboolib.common.platform.Platform
 import taboolib.common.platform.PlatformFactory
 import taboolib.common.platform.PlatformSide
 import taboolib.common.platform.Schedule
+import taboolib.common.platform.function.warning
 import taboolib.common.util.unsafeLazy
 import java.io.IOException
 import java.util.concurrent.CompletableFuture
@@ -37,7 +39,7 @@ object VelocityProxyManager : ProxyMessageManager {
 
     override val executor: ExecutorService by unsafeLazy {
         val factory = ThreadFactoryBuilder().setNameFormat("TrChat PluginMessage Processing Thread #%d").build()
-        Executors.newFixedThreadPool(4, factory)
+        Executors.newFixedThreadPool(8, factory)
     }
 
     override val allNames = mutableMapOf<Int, Map<String, String?>>()
@@ -49,7 +51,16 @@ object VelocityProxyManager : ProxyMessageManager {
         return executor.submit {
             try {
                 for (bytes in buildMessage(*args)) {
-                    recipient.sendPluginMessage(outgoing, bytes)
+                    if (!recipient.sendPluginMessage(outgoing, bytes)) {
+                        warning("Failed to send proxy trchat message!")
+                        warning(args)
+                        val info = when (recipient) {
+                            is RegisteredServer -> recipient.serverInfo
+                            is ServerConnection -> recipient.serverInfo
+                            else -> continue
+                        }
+                        warning(info)
+                    }
                 }
             } catch (e: IOException) {
                 e.print("Failed to send proxy trchat message!")
@@ -63,17 +74,20 @@ object VelocityProxyManager : ProxyMessageManager {
             try {
                 for (bytes in buildMessage(*args)) {
                     recipients.forEach { v ->
-                        v.sendPluginMessage(outgoing, bytes)
+                        if (!v.sendPluginMessage(outgoing, bytes)) {
+                            warning("Failed to send proxy trchat message!")
+                            warning(args)
+                            warning(v.serverInfo)
+                        }
                     }
                 }
             } catch (e: IOException) {
                 e.print("Failed to send proxy trchat message!")
             }
         }
-
     }
 
-    @Schedule(async = true, period = 200L)
+    @Schedule(async = true, period = 100L)
     override fun updateAllNames() {
         sendMessageToAll(
             "UpdateAllNames",

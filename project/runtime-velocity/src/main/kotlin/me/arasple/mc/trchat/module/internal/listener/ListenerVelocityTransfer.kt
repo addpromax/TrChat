@@ -2,7 +2,6 @@ package me.arasple.mc.trchat.module.internal.listener
 
 import com.velocitypowered.api.event.connection.PluginMessageEvent
 import com.velocitypowered.api.proxy.ServerConnection
-import me.arasple.mc.trchat.api.impl.VelocityChannelManager
 import me.arasple.mc.trchat.api.impl.VelocityProxyManager
 import me.arasple.mc.trchat.module.internal.TrChatVelocity.plugin
 import me.arasple.mc.trchat.util.print
@@ -14,6 +13,7 @@ import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer
 import taboolib.common.platform.Platform
 import taboolib.common.platform.PlatformSide
 import taboolib.common.platform.event.SubscribeEvent
+import taboolib.common.platform.function.warning
 import java.io.IOException
 
 /**
@@ -28,16 +28,20 @@ object ListenerVelocityTransfer {
 
     @SubscribeEvent
     fun onTransfer(e: PluginMessageEvent) {
-        if (e.identifier.id == VelocityProxyManager.incoming.id) {
-            try {
-                val message = MessageReader.read(e.data)
-                if (message.isCompleted) {
-                    val data = message.build()
-                    execute(data, e.source as ServerConnection)
-                }
-            } catch (ex: IOException) {
-                ex.print("Error occurred while reading plugin message.")
+        if (e.identifier != VelocityProxyManager.incoming) return
+        val source = e.source
+        if (source !is ServerConnection) {
+            warning("Received trchat:proxy message, but source is not ServerConnection")
+            return
+        }
+        try {
+            val message = MessageReader.read(e.data)
+            if (message.isCompleted) {
+                val data = message.build()
+                execute(data, source)
             }
+        } catch (ex: IOException) {
+            ex.print("Error occurred while reading plugin message.")
         }
     }
 
@@ -72,13 +76,6 @@ object ListenerVelocityTransfer {
             "UpdateNames" -> {
                 val names = data[1].split(",").map { it.split("-", limit = 2) }
                 VelocityProxyManager.allNames[connection.serverInfo.address.port] = names.associate { it[0] to it[1].takeIf { dn -> dn != "null" } }
-            }
-            "FetchProxyChannels" -> {
-                VelocityChannelManager.sendAllProxyChannels(connection.serverInfo.address.port)
-            }
-            "LoadedProxyChannel" -> {
-                val id = data[1]
-                VelocityChannelManager.loadedServers.computeIfAbsent(id) { ArrayList() }.add(connection.serverInfo.address.port)
             }
         }
     }

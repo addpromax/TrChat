@@ -19,7 +19,6 @@ interface ChannelManager {
      * 获取聊天频道
      *
      * Bukkit -> Channel
-     * BungeeCord/Velocity -> String
      */
     fun getChannel(id: String): Any?
 

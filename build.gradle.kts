@@ -21,7 +21,10 @@ subprojects {
                 "bukkit-hook",
                 "bukkit-util",
                 "bukkit-ui",
-                "bukkit-xseries"
+                "bukkit-ui-legacy",
+                "bukkit-ui-modern",
+                "bukkit-xseries",
+                "bukkit-xseries-item"
             )
             install("database-sql")
             install(
@@ -33,7 +36,12 @@ subprojects {
             )
             install(
                 "nms",
-                "nms-util"
+                "nms-util",
+                "nms-util-stable",
+                "nms-util-unstable",
+                "nms-util-tag",
+                "nms-util-tag-12005",
+                "nms-util-tag-legacy",
             )
             install(
                 "database-alkaid-redis",
@@ -42,13 +50,11 @@ subprojects {
             )
             install(BUKKIT, BUNGEE, VELOCITY)
             install("platform-bukkit-impl")
-//            install(UNIVERSAL, DATABASE, KETHER, METRICS, NMS_UTIL)
-//            install(EXPANSION_REDIS, EXPANSION_JAVASCRIPT, EXPANSION_PLAYER_DATABASE)
-//            install(BUKKIT_ALL, BUNGEE, VELOCITY)
+            forceDownloadInDev = false
             repoTabooLib = "http://mcitd.cn:8081/repository/releases"
         }
         version {
-            taboolib = "6.2.0-beta4-dev"
+            taboolib = "6.2.0-beta5-dev"
             coroutines = null
 //            isSkipKotlin = true
 //            isSkipKotlinRelocate = true

@@ -3,7 +3,6 @@ package me.arasple.mc.trchat.module.display.function
 import me.arasple.mc.trchat.api.event.TrChatReloadEvent
 import me.arasple.mc.trchat.module.internal.script.Reaction
 import org.bukkit.entity.Player
-import taboolib.common.io.getInstance
 import taboolib.common.io.runningClassesWithoutLibrary
 import taboolib.common.platform.ProxyCommandSender
 import taboolib.common.platform.ProxyPlayer
@@ -39,8 +38,8 @@ abstract class Function(val id: String) {
         fun reload(customFunctions: List<CustomFunction>) {
             functions.clear()
             functions.addAll(runningClassesWithoutLibrary
-                .filter { it.isAnnotationPresent(StandardFunction::class.java) }
-                .mapNotNull { it.getInstance()?.get() as? Function }
+                .filter { it.hasAnnotation(StandardFunction::class.java) }
+                .mapNotNull { it.getInstance() as? Function }
             )
             functions.addAll(customFunctions)
             TrChatReloadEvent.Function(functions).call()

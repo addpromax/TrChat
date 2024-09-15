@@ -9,10 +9,10 @@ import org.bukkit.inventory.ItemStack
 import taboolib.common.platform.function.adaptPlayer
 import taboolib.library.reflex.Reflex.Companion.invokeConstructor
 import taboolib.module.chat.ComponentText
-import taboolib.module.nms.LocaleKey
+import taboolib.module.nms.MinecraftLanguage
 import taboolib.module.nms.MinecraftVersion.isUniversal
 import taboolib.module.nms.MinecraftVersion.majorLegacy
-import taboolib.module.nms.NMSItem
+import taboolib.module.nms.NMSItemTag
 import taboolib.module.nms.nmsProxy
 import taboolib.module.nms.sendPacket
 import taboolib.platform.Folia
@@ -130,9 +130,9 @@ class NMSImpl : NMS() {
         return itemStack
     }
 
-    override fun getLocaleKey(itemStack: ItemStack): LocaleKey {
-        val nmsItemStack = nmsProxy<NMSItem>().getNMSCopy(itemStack) as net.minecraft.server.v1_16_R3.ItemStack
+    override fun getLocaleKey(itemStack: ItemStack): MinecraftLanguage.LanguageKey {
+        val nmsItemStack = nmsProxy<NMSItemTag>().getNMSCopy(itemStack) as net.minecraft.server.v1_16_R3.ItemStack
         val nmsItem = nmsItemStack.item
-        return LocaleKey("N", nmsItem.f(nmsItemStack))
+        return MinecraftLanguage.LanguageKey(MinecraftLanguage.LanguageKey.Type.NORMAL, nmsItem.f(nmsItemStack))
     }
 }

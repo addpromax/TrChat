@@ -4,7 +4,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import taboolib.common.platform.function.adaptPlayer
 import taboolib.module.chat.ComponentText
-import taboolib.module.nms.LocaleKey
+import taboolib.module.nms.MinecraftLanguage
 import java.util.*
 
 class NMSImpl12100 : NMS() {
@@ -29,7 +29,7 @@ class NMSImpl12100 : NMS() {
         TODO("Not yet implemented")
     }
 
-    override fun getLocaleKey(itemStack: ItemStack): LocaleKey {
+    override fun getLocaleKey(itemStack: ItemStack): MinecraftLanguage.LanguageKey {
         TODO("Not yet implemented")
     }
 }

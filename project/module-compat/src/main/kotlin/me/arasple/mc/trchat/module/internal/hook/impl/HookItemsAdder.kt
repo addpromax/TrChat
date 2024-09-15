@@ -14,10 +14,14 @@ class HookItemsAdder : HookAbstract() {
         if (!isHooked) {
             return message
         }
-        return if (player == null) {
-            FontImageWrapper.replaceFontImages(message)
-        } else {
-            FontImageWrapper.replaceFontImages(player, message)
+        try {
+            return if (player == null) {
+                FontImageWrapper.replaceFontImages(message)
+            } else {
+                FontImageWrapper.replaceFontImages(player, message)
+            }
+        } catch (_: Throwable) {
+            return message
         }
     }
 }

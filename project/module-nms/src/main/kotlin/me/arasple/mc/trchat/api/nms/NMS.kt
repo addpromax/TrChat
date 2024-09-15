@@ -4,7 +4,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import taboolib.common.util.unsafeLazy
 import taboolib.module.chat.ComponentText
-import taboolib.module.nms.LocaleKey
+import taboolib.module.nms.MinecraftLanguage
 import taboolib.module.nms.MinecraftVersion
 import taboolib.module.nms.nmsProxy
 import java.util.*
@@ -27,7 +27,7 @@ abstract class NMS {
 
     abstract fun optimizeNBT(itemStack: ItemStack, nbtWhitelist: Array<String> = whitelistTags): ItemStack
 
-    abstract fun getLocaleKey(itemStack: ItemStack): LocaleKey
+    abstract fun getLocaleKey(itemStack: ItemStack): MinecraftLanguage.LanguageKey
 
     companion object {
 

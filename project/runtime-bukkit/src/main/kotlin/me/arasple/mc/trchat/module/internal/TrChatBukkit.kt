@@ -16,7 +16,6 @@ import taboolib.common.LifeCycle
 import taboolib.common.platform.*
 import taboolib.common.platform.function.console
 import taboolib.common.platform.function.pluginVersion
-import taboolib.common.platform.function.warning
 import taboolib.module.lang.sendLang
 import taboolib.module.nms.MinecraftVersion.majorLegacy
 import taboolib.module.nms.disablePacketListener
@@ -64,7 +63,6 @@ object TrChatBukkit : Plugin() {
         HookPlugin.printInfo()
         reload(console())
         console().sendLang("Plugin-Enabled", pluginVersion)
-        warning("In this version, some functions do not work!")
     }
 
     override fun onDisable() {

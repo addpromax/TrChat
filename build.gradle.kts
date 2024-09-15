@@ -21,12 +21,16 @@ subprojects {
                 "bukkit-hook",
                 "bukkit-util",
                 "bukkit-ui",
+                "bukkit-ui-12100",
                 "bukkit-ui-legacy",
-                "bukkit-ui-modern",
                 "bukkit-xseries",
                 "bukkit-xseries-item"
             )
-            install("database-sql")
+            install(
+                "database",
+                "database-alkaid-redis",
+                "database-player"
+            )
             install(
                 "minecraft-chat",
                 "minecraft-command-helper",
@@ -35,26 +39,18 @@ subprojects {
                 "minecraft-metrics"
             )
             install(
-                "nms",
-                "nms-util",
-                "nms-util-stable",
-                "nms-util-unstable",
-                "nms-util-tag",
-                "nms-util-tag-12005",
-                "nms-util-tag-legacy",
+                "bukkit-nms",
+                "bukkit-nms-stable",
+                "bukkit-nms-tag",
+                "bukkit-nms-tag-12005",
+                "bukkit-nms-tag-legacy",
             )
-            install(
-                "database-alkaid-redis",
-                "database-player",
-                "script-javascript"
-            )
+            install("script-javascript")
             install(BUKKIT, BUNGEE, VELOCITY)
             install("platform-bukkit-impl")
-            forceDownloadInDev = false
-            repoTabooLib = "http://mcitd.cn:8081/repository/releases"
         }
         version {
-            taboolib = "6.2.0-beta5-dev"
+            taboolib = "6.2.0-beta5"
             coroutines = null
 //            isSkipKotlin = true
 //            isSkipKotlinRelocate = true
@@ -65,7 +61,6 @@ subprojects {
     repositories {
         mavenLocal()
         mavenCentral()
-        maven("http://mcitd.cn:8081/repository/releases") { isAllowInsecureProtocol = true }
         maven("https://jitpack.io")
         maven("https://oss.sonatype.org/content/repositories/snapshots")
         maven("https://papermc.io/repo/repository/maven-public/")

@@ -35,7 +35,10 @@ import taboolib.module.chat.Components
 import taboolib.module.chat.impl.DefaultComponent
 import taboolib.module.configuration.ConfigNode
 import taboolib.module.configuration.ConfigNodeTransfer
-import taboolib.module.nms.*
+import taboolib.module.nms.MinecraftVersion
+import taboolib.module.nms.getI18nName
+import taboolib.module.nms.getKey
+import taboolib.module.nms.getLanguageKey
 import taboolib.module.ui.buildMenu
 import taboolib.module.ui.type.Chest
 import taboolib.module.ui.type.PageableChest
@@ -218,7 +221,7 @@ object ItemShow : Function("ITEM") {
         } else {
             try {
                 if (MinecraftVersion.isHigherOrEqual(MinecraftVersion.V1_15)) {
-                    Components.translation(getLocaleKey().path)
+                    Components.translation(getLanguageKey().path)
                 } else {
                     Components.text(getI18nName(player))
                 }
@@ -228,7 +231,7 @@ object ItemShow : Function("ITEM") {
                     Components.translation(NMS.instance.getLocaleKey(this).path)
                 } catch (_: Throwable) {
                     try {
-                        Components.text(nmsProxy<NMSItem>().getKey(this))
+                        Components.text(getKey())
                     } catch (_: Throwable) {
                         Components.text(type.name)
                     }

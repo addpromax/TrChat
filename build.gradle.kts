@@ -50,7 +50,7 @@ subprojects {
             install("platform-bukkit-impl")
         }
         version {
-            taboolib = "6.2.0-beta6"
+            taboolib = "6.2.0-beta8"
             coroutines = null
 //            isSkipKotlin = true
 //            isSkipKotlinRelocate = true

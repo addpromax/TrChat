@@ -77,7 +77,7 @@ subprojects {
         compileOnly("net.kyori:adventure-api:4.16.0")
     }
 
-    // 编译配置
+    // 编译配置 
     java {
         withSourcesJar()
         sourceCompatibility = JavaVersion.VERSION_1_8
